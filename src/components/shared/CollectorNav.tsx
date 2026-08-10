@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { Truck, PlusCircle, History, LogOut, Wifi, Globe } from 'lucide-react';
+import { PlusCircle, History, LogOut, Wifi } from 'lucide-react';
 
 export function CollectorNav() {
   const pathname = usePathname();
@@ -23,7 +23,7 @@ export function CollectorNav() {
           </div>
           <div>
             <h1 className="text-xs font-bold text-yellow-400 uppercase tracking-wider leading-none" style={{ fontFamily: 'Georgia, serif' }}>
-              DMC Field Collector
+              Waste Mgmt Collector
             </h1>
             <span className="text-[10px] text-gray-200 font-medium flex items-center gap-1 mt-0.5">
               <Wifi className="w-2.5 h-2.5 text-green-400 animate-pulse" /> Telemetry Online
@@ -32,13 +32,6 @@ export function CollectorNav() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/portal"
-            className="p-1.5 bg-blue-900 hover:bg-blue-800 text-yellow-300 rounded-sm text-xs"
-            title="Citizen Portal"
-          >
-            <Globe className="w-3.5 h-3.5" />
-          </Link>
           <span className="text-xs text-gray-200 font-bold truncate max-w-[80px]">
             {session?.user?.name?.split(' ')[0]}
           </span>

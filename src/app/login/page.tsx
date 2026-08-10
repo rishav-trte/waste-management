@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, Truck, ArrowRight, Lock, Mail, Globe } from 'lucide-react';
+import { ShieldCheck, Truck, ArrowRight, Lock, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import { MunicipalPortalHeader } from '@/components/municipal/MunicipalPortalHeader';
 
@@ -104,11 +104,8 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="pt-6 mt-6 border-t border-blue-700/60 flex items-center justify-between text-[11px] text-gray-300">
+            <div className="pt-6 mt-6 border-t border-blue-700/60 text-[11px] text-gray-300">
               <span>National Informatics Centre</span>
-              <a href="/portal" className="text-yellow-300 font-semibold hover:underline flex items-center gap-1">
-                <Globe className="w-3 h-3" /> Citizen Portal »
-              </a>
             </div>
           </div>
 

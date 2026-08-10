@@ -12,7 +12,6 @@ import {
   LogOut,
   ShieldCheck,
   MapPin,
-  Globe,
 } from 'lucide-react';
 
 const navItems = [
@@ -44,10 +43,10 @@ export function Sidebar() {
               className="text-sm font-bold text-yellow-400 tracking-wide uppercase"
               style={{ fontFamily: 'Georgia, serif' }}
             >
-              DMC Admin
+              Waste Mgmt Admin
             </h1>
             <div className="flex items-center gap-1 text-[10px] text-gray-300 font-semibold uppercase tracking-wider">
-              <ShieldCheck className="w-3 h-3 text-[#f97316]" /> Municipal Council
+              <ShieldCheck className="w-3 h-3 text-[#f97316]" /> Waste Operations
             </div>
           </div>
         </div>
@@ -75,16 +74,6 @@ export function Sidebar() {
               </Link>
             );
           })}
-          
-          <div className="pt-4 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-300 border-b border-blue-800/80 mb-2">
-            Portals & Services
-          </div>
-          <Link
-            href="/portal"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold uppercase tracking-wide text-yellow-300 hover:bg-blue-800/60 transition-all"
-          >
-            <Globe className="w-4 h-4 text-yellow-400" /> Public Citizen Portal
-          </Link>
         </nav>
       </div>
 
