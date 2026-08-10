@@ -1,0 +1,103 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  COLLECTOR
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum PaymentMethod {
+  ONLINE
+  CASH
+  CHEQUE
+}
+
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  passwordHash String
+  role         Role         @default(COLLECTOR)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  collections  Collection[]
+}
+
+model PropertyType {
+  id             String          @id @default(uuid())
+  name           String          @unique
+  description    String?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  pricingConfigs PricingConfig[]
+  properties     Property[]
+}
+
+model PricingConfig {
+  id             String       @id @default(uuid())
+  propertyTypeId String
+  propertyType   PropertyType @relation(fields: [propertyTypeId], references: [id], onDelete: Cascade)
+  price          Decimal      @db.Decimal(10, 2)
+  unit           String       @default("per_collection")
+  isActive       Boolean      @default(true)
+  effectiveFrom  DateTime     @default(now())
+  effectiveTo    DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  collections    Collection[]
+
+  @@index([propertyTypeId, isActive])
+}
+
+model Property {
+  id             String       @id @default(uuid())
+  ownerName      String
+  address        String
+  propertyTypeId String
+  propertyType   PropertyType @relation(fields: [propertyTypeId], references: [id])
+  phone          String?
+  latitude       Float
+  longitude      Float
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  collections    Collection[]
+
+  @@index([propertyTypeId])
+  @@index([latitude, longitude])
+}
+
+model Collection {
+  id               String        @id @default(uuid())
+  propertyId       String
+  property         Property      @relation(fields: [propertyId], references: [id])
+  collectorId      String
+  collector        User          @relation(fields: [collectorId], references: [id])
+  pricingConfigId  String
+  pricingConfig    PricingConfig @relation(fields: [pricingConfigId], references: [id])
+  amountCharged    Decimal       @db.Decimal(10, 2)
+  paymentStatus    PaymentStatus @default(PENDING)
+  paymentMethod    PaymentMethod @default(ONLINE)
+  paymentReference String?
+  notes            String?
+  latitude         Float
+  longitude        Float
+  collectedAt      DateTime      @default(now())
+
+  @@index([collectedAt])
+  @@index([propertyId])
+  @@index([collectorId])
+  @@index([paymentStatus])
+}
