@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Truck, Calendar, MapPin, Layers, CheckCircle2, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Truck, Calendar, MapPin, Layers, CheckCircle2, ArrowRight, ShieldCheck, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
 
@@ -15,6 +15,10 @@ const wasteCategories = [
 export default function CitizenRequestPage() {
   const [propertyTypes, setPropertyTypes] = useState<any[]>([]);
   const [address, setAddress] = useState('');
+  const [latitude, setLatitude] = useState<string>('');
+  const [longitude, setLongitude] = useState<string>('');
+  const [gpsLoading, setGpsLoading] = useState(false);
+
   const [propertyTypeId, setPropertyTypeId] = useState('');
   const [wasteType, setWasteType] = useState('Dry & Recyclable');
   const [preferredDate, setPreferredDate] = useState('');
@@ -33,6 +37,31 @@ export default function CitizenRequestPage() {
 
     fetchRequests();
   }, []);
+
+  const detectLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser');
+      return;
+    }
+
+    setGpsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLatitude(pos.coords.latitude.toFixed(6));
+        setLongitude(pos.coords.longitude.toFixed(6));
+        setGpsLoading(false);
+        toast.success('GPS coordinates locked successfully!');
+      },
+      (err) => {
+        console.warn('GPS error, using default coordinates:', err);
+        setLatitude('28.613900');
+        setLongitude('77.209000');
+        setGpsLoading(false);
+        toast.info('GPS fallback coordinates applied');
+      },
+      { enableHighAccuracy: true, timeout: 5000 }
+    );
+  };
 
   const fetchRequests = async () => {
     try {
@@ -56,7 +85,15 @@ export default function CitizenRequestPage() {
       const res = await fetch('/api/portal/waste-requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address, propertyTypeId, wasteType, preferredDate, notes }),
+        body: JSON.stringify({
+          address,
+          latitude,
+          longitude,
+          propertyTypeId,
+          wasteType,
+          preferredDate,
+          notes,
+        }),
       });
 
       const data = await res.json();
@@ -64,6 +101,8 @@ export default function CitizenRequestPage() {
       if (res.ok) {
         toast.success('On-demand waste pickup scheduled!');
         setAddress('');
+        setLatitude('');
+        setLongitude('');
         setNotes('');
         fetchRequests();
       } else {
@@ -85,7 +124,7 @@ export default function CitizenRequestPage() {
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">On-Demand Waste Pickup Request</h1>
         <p className="text-xs sm:text-sm text-blue-200 max-w-xl leading-relaxed">
-          Schedule special doorstep waste collection for residential, commercial, or industrial premises across the municipality.
+          Schedule doorstep waste collection with GPS coordinates for precise collection team routing.
         </p>
       </div>
 
@@ -93,7 +132,7 @@ export default function CitizenRequestPage() {
         {/* Request Form */}
         <form onSubmit={handleSubmit} className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-5 shadow-xl">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <Layers className="w-5 h-5 text-emerald-400" /> Schedule Pickup Slot
+            <Layers className="w-5 h-5 text-emerald-400" /> Schedule Pickup Slot & Coordinates
           </h2>
 
           <div>
@@ -106,6 +145,50 @@ export default function CitizenRequestPage() {
               onChange={(e) => setAddress(e.target.value)}
               className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
             />
+          </div>
+
+          {/* GPS Coordinates & Autodetect */}
+          <div className="p-4 bg-slate-950/80 border border-slate-800 rounded-2xl space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-emerald-400" /> GIS Coordinates (Lat / Long)
+              </label>
+              <button
+                type="button"
+                onClick={detectLocation}
+                disabled={gpsLoading}
+                className="inline-flex items-center gap-1.5 text-xs text-emerald-300 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 px-3 py-1 rounded-lg font-semibold transition-all"
+              >
+                <Navigation className={`w-3.5 h-3.5 ${gpsLoading ? 'animate-spin' : ''}`} />
+                {gpsLoading ? 'Locating...' : 'Detect Current GPS'}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] text-slate-400 font-medium mb-1">Latitude</label>
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="e.g. 28.61393"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] text-slate-400 font-medium mb-1">Longitude</label>
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="e.g. 77.20902"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -183,7 +266,7 @@ export default function CitizenRequestPage() {
             <CheckCircle2 className="w-5 h-5 text-emerald-400" /> My Scheduled Pickups
           </h2>
 
-          <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+          <div className="space-y-3 max-h-[550px] overflow-y-auto pr-1">
             {myRequests.length === 0 ? (
               <div className="p-6 bg-slate-900 border border-slate-800 rounded-2xl text-center text-xs text-slate-400">
                 No active pickup requests logged yet.
@@ -206,6 +289,11 @@ export default function CitizenRequestPage() {
                     </span>
                   </div>
                   <p className="text-slate-400 truncate">{r.address}</p>
+                  {(r.latitude || r.longitude) && (
+                    <p className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
+                      <MapPin className="w-3 h-3" /> {r.latitude?.toFixed(5)}, {r.longitude?.toFixed(5)}
+                    </p>
+                  )}
                   <div className="flex justify-between items-center text-[10px] text-slate-500 pt-1 border-t border-slate-800">
                     <span>Date: {new Date(r.preferredDate).toLocaleDateString()}</span>
                     <span>Category: {r.propertyType?.name}</span>

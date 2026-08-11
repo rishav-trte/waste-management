@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { address, propertyTypeId, wasteType, preferredDate, notes } = await req.json();
+    const { address, latitude, longitude, propertyTypeId, wasteType, preferredDate, notes } = await req.json();
 
     if (!address || !propertyTypeId || !preferredDate) {
       return NextResponse.json(
@@ -51,6 +51,8 @@ export async function POST(req: Request) {
       data: {
         userId: session.user.id,
         address,
+        latitude: latitude ? parseFloat(latitude.toString()) : null,
+        longitude: longitude ? parseFloat(longitude.toString()) : null,
         propertyTypeId,
         wasteType: wasteType || 'General Waste',
         preferredDate: new Date(preferredDate),

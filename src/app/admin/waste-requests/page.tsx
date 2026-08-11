@@ -96,7 +96,20 @@ export default function SubAdminWasteRequestsPage() {
                     </td>
                     <td className="py-3.5 px-4 max-w-xs">
                       <div className="font-medium text-white truncate">{r.address}</div>
-                      <div className="text-[10px] text-emerald-400 font-semibold">{r.propertyType?.name}</div>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[10px] text-emerald-400 font-semibold">{r.propertyType?.name}</span>
+                        {(r.latitude || r.longitude) && (
+                          <a
+                            href={`https://maps.google.com/?q=${r.latitude},${r.longitude}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] font-mono text-blue-400 hover:underline inline-flex items-center gap-0.5"
+                          >
+                            <MapPin className="w-3 h-3 text-emerald-400" />
+                            {r.latitude?.toFixed(4)}, {r.longitude?.toFixed(4)}
+                          </a>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3.5 px-4 font-semibold text-slate-200">{r.wasteType}</td>
                     <td className="py-3.5 px-4 font-mono text-slate-400">

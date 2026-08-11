@@ -141,6 +141,8 @@ model WasteRequest {
   propertyTypeId String
   propertyType   PropertyType       @relation(fields: [propertyTypeId], references: [id])
   address        String
+  latitude       Float?
+  longitude      Float?
   wasteType      String             @default("General")
   preferredDate  DateTime
   status         WasteRequestStatus @default(PENDING)
