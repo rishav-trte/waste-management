@@ -16,12 +16,14 @@ import {
   Truck,
   LifeBuoy,
   History,
+  UserCheck,
 } from 'lucide-react';
 
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/properties', label: 'Properties & GIS Map', icon: Building2 },
   { href: '/admin/property-types', label: 'Property Types & Price', icon: Tags },
+  { href: '/admin/users', label: 'User & Role Management', icon: UserCheck },
   { href: '/admin/excel-upload', label: 'Excel Bulk Importer', icon: FileSpreadsheet },
   { href: '/admin/waste-requests', label: 'Waste Collection Requests', icon: Truck },
   { href: '/admin/support', label: 'Support Desk (Freshdesk)', icon: LifeBuoy },
