@@ -9,9 +9,12 @@ export default async function HomePage() {
     redirect('/login');
   }
 
-  if (session.user.role === 'ADMIN') {
+  const role = session.user.role;
+  if (['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'].includes(role)) {
     redirect('/admin/dashboard');
+  } else if (role === 'USER') {
+    redirect('/portal/request-collection');
   } else {
-    redirect('/collector/dashboard');
+    redirect('/collector/collect');
   }
 }

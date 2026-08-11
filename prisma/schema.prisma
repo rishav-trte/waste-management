@@ -8,8 +8,11 @@ generator client {
 }
 
 enum Role {
+  COMMISSIONER
+  SUB_ADMIN
   ADMIN
   COLLECTOR
+  USER
 }
 
 enum PaymentStatus {
@@ -24,15 +27,39 @@ enum PaymentMethod {
   CHEQUE
 }
 
+enum WasteRequestStatus {
+  PENDING
+  ASSIGNED
+  COMPLETED
+  CANCELLED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketCategory {
+  MISSED_PICKUP
+  BILLING_DISCREPANCY
+  DAMAGED_BIN
+  GENERAL_INQUIRY
+}
+
 model User {
-  id           String       @id @default(uuid())
-  name         String
-  email        String       @unique
-  passwordHash String
-  role         Role         @default(COLLECTOR)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  collections  Collection[]
+  id                    String         @id @default(uuid())
+  name                  String
+  email                 String         @unique
+  passwordHash          String
+  role                  Role           @default(COLLECTOR)
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  collections           Collection[]
+  wasteRequestsCreated  WasteRequest[] @relation("CitizenWasteRequests")
+  wasteRequestsAssigned WasteRequest[] @relation("CollectorWasteRequests")
+  supportTickets        SupportTicket[]
 }
 
 model PropertyType {
@@ -44,6 +71,7 @@ model PropertyType {
   updatedAt      DateTime        @updatedAt
   pricingConfigs PricingConfig[]
   properties     Property[]
+  wasteRequests  WasteRequest[]
 }
 
 model PricingConfig {
@@ -63,17 +91,18 @@ model PricingConfig {
 }
 
 model Property {
-  id             String       @id @default(uuid())
+  id             String         @id @default(uuid())
   ownerName      String
   address        String
   propertyTypeId String
-  propertyType   PropertyType @relation(fields: [propertyTypeId], references: [id])
+  propertyType   PropertyType   @relation(fields: [propertyTypeId], references: [id])
   phone          String?
   latitude       Float
   longitude      Float
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
   collections    Collection[]
+  wasteRequests  WasteRequest[]
 
   @@index([propertyTypeId])
   @@index([latitude, longitude])
@@ -100,4 +129,60 @@ model Collection {
   @@index([propertyId])
   @@index([collectorId])
   @@index([paymentStatus])
+}
+
+model WasteRequest {
+  id             String             @id @default(uuid())
+  userId         String
+  user           User               @relation("CitizenWasteRequests", fields: [userId], references: [id])
+  propertyId     String?
+  property       Property?          @relation(fields: [propertyId], references: [id])
+  propertyTypeId String
+  propertyType   PropertyType       @relation(fields: [propertyTypeId], references: [id])
+  address        String
+  wasteType      String             @default("General")
+  preferredDate  DateTime
+  status         WasteRequestStatus @default(PENDING)
+  collectorId    String?
+  collector      User?              @relation("CollectorWasteRequests", fields: [collectorId], references: [id])
+  notes          String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model SupportTicket {
+  id                String         @id @default(uuid())
+  userId            String?
+  user              User?          @relation(fields: [userId], references: [id])
+  name              String
+  email             String
+  phone             String?
+  category          TicketCategory @default(GENERAL_INQUIRY)
+  subject           String
+  description       String
+  status            TicketStatus   @default(OPEN)
+  adminNotes        String?
+  freshdeskTicketId String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@index([email])
+  @@index([status])
+}
+
+model PaymentOrder {
+  id                String   @id @default(uuid())
+  razorpayOrderId   String   @unique
+  razorpayPaymentId String?
+  amount            Decimal  @db.Decimal(10, 2)
+  currency          String   @default("INR")
+  status            String   @default("CREATED")
+  userId            String?
+  collectionId      String?
+  wasteRequestId    String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }

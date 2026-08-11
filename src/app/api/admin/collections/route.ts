@@ -8,7 +8,8 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'ADMIN') {
+    const allowedAdminRoles = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'];
+    if (!session || !allowedAdminRoles.includes(session.user.role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -23,7 +24,7 @@ export async function GET(req: Request) {
     if (propertyTypeId) where.property = { propertyTypeId };
 
     const collections = await prisma.collection.findMany({
-      take: limit + 1, // Fetch 1 extra to check if there is a next page
+      take: limit + 1,
       cursor: cursor ? { id: cursor } : undefined,
       where,
       orderBy: { collectedAt: 'desc' },

@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 
 const getCleanDatabaseUrl = () => {
   let url = process.env.DATABASE_URL || '';
-  // Strip accidental outer quotes or whitespace
   url = url.trim().replace(/^["']|["']$/g, '');
   return url;
 };

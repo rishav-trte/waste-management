@@ -8,7 +8,8 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'ADMIN') {
+    const allowedAdminRoles = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'];
+    if (!session || !allowedAdminRoles.includes(session.user.role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -28,7 +29,8 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'ADMIN') {
+    const allowedAdminRoles = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'];
+    if (!session || !allowedAdminRoles.includes(session.user.role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

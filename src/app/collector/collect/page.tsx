@@ -118,11 +118,14 @@ export default function NewCollectionPage() {
         toast.success('Collection logged and cash payment verified!');
         resetForm();
       } else {
-        // Trigger Payment Modal Order Creation
-        const payRes = await fetch('/api/payments/create', {
+        // Trigger Razorpay Payment Order Creation
+        const payRes = await fetch('/api/payments/razorpay/create-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ collectionId: data.collection.id }),
+          body: JSON.stringify({
+            amount: selectedProperty?.propertyType?.activePrice || 150,
+            collectionId: data.collection.id,
+          }),
         });
         const payOrder = await payRes.json();
 
@@ -141,19 +144,19 @@ export default function NewCollectionPage() {
   const handleConfirmPayment = async () => {
     setProcessingPayment(true);
     try {
-      // Simulate Payment Gateway Webhook Confirmation
-      const res = await fetch('/api/payments/webhook', {
+      // Confirm & Verify Razorpay Payment
+      const res = await fetch('/api/payments/razorpay/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          razorpayOrderId: paymentModalData.order?.orderId,
+          razorpayPaymentId: `pay_rzp_${Date.now()}`,
           collectionId: paymentModalData.collection.id,
-          paymentReference: `PAY_GATEWAY_${Date.now()}`,
-          status: 'SUCCESS',
         }),
       });
 
       if (res.ok) {
-        toast.success('Online Payment Processed & Confirmed!');
+        toast.success('Razorpay Payment Processed & Confirmed!');
         setPaymentModalData(null);
         resetForm();
       } else {
@@ -224,10 +227,25 @@ export default function NewCollectionPage() {
 
         {/* Selected Property Preview */}
         {selectedProperty && (
-          <div className="p-4 bg-emerald-950/30 border border-emerald-500/40 rounded-2xl space-y-2">
-            <p className="text-xs font-bold text-emerald-400">Target Location</p>
-            <p className="text-sm font-bold text-white">{selectedProperty.ownerName}</p>
-            <p className="text-xs text-slate-300">{selectedProperty.address}</p>
+          <div className="p-4 bg-emerald-950/40 border border-emerald-500/50 rounded-2xl space-y-2">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold uppercase tracking-wider text-emerald-400">Target Location</p>
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">
+                {selectedProperty.propertyType?.name || 'Property'}
+              </span>
+            </div>
+            <div className="flex justify-between items-end pt-1">
+              <div>
+                <p className="text-sm font-bold text-white">{selectedProperty.ownerName}</p>
+                <p className="text-xs text-slate-300 mt-0.5">{selectedProperty.address}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Tariff Amount</p>
+                <p className="text-base font-extrabold text-emerald-400">
+                  {formatCurrency(selectedProperty.propertyType?.activePrice || 150)}
+                </p>
+              </div>
+            </div>
           </div>
         )}
 

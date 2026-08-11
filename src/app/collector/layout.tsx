@@ -7,8 +7,9 @@ import { MunicipalPortalHeader } from '@/components/municipal/MunicipalPortalHea
 
 export default async function CollectorLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
+  const allowedRoles = ['COLLECTOR', 'COMMISSIONER', 'SUB_ADMIN', 'ADMIN'];
 
-  if (!session || (session.user.role !== 'COLLECTOR' && session.user.role !== 'ADMIN')) {
+  if (!session || !allowedRoles.includes(session.user.role)) {
     redirect('/login');
   }
 

@@ -3,25 +3,40 @@
 import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, Truck, ArrowRight, Lock, Mail } from 'lucide-react';
+import { ShieldCheck, Truck, ArrowRight, Lock, Mail, UserCheck, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { MunicipalPortalHeader } from '@/components/municipal/MunicipalPortalHeader';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@wastemgmt.gov.in');
-  const [password, setPassword] = useState('Admin@123456');
-  const [role, setRole] = useState<'ADMIN' | 'COLLECTOR'>('ADMIN');
+  const [email, setEmail] = useState('commissioner@wastemgmt.gov.in');
+  const [password, setPassword] = useState('Commissioner@123456');
+  const [selectedRole, setSelectedRole] = useState<'COMMISSIONER' | 'SUB_ADMIN' | 'ADMIN' | 'COLLECTOR' | 'USER'>('COMMISSIONER');
   const [loading, setLoading] = useState(false);
 
-  const handleQuickFill = (targetRole: 'ADMIN' | 'COLLECTOR') => {
-    setRole(targetRole);
-    if (targetRole === 'ADMIN') {
-      setEmail('admin@wastemgmt.gov.in');
-      setPassword('Admin@123456');
-    } else {
-      setEmail('collector1@wastemgmt.gov.in');
-      setPassword('Collector@123456');
+  const handleQuickFill = (targetRole: 'COMMISSIONER' | 'SUB_ADMIN' | 'ADMIN' | 'COLLECTOR' | 'USER') => {
+    setSelectedRole(targetRole);
+    switch (targetRole) {
+      case 'COMMISSIONER':
+        setEmail('commissioner@wastemgmt.gov.in');
+        setPassword('Commissioner@123456');
+        break;
+      case 'SUB_ADMIN':
+        setEmail('subadmin@wastemgmt.gov.in');
+        setPassword('Subadmin@123456');
+        break;
+      case 'ADMIN':
+        setEmail('admin@wastemgmt.gov.in');
+        setPassword('Admin@123456');
+        break;
+      case 'COLLECTOR':
+        setEmail('collector1@wastemgmt.gov.in');
+        setPassword('Collector@123456');
+        break;
+      case 'USER':
+        setEmail('citizen@wastemgmt.gov.in');
+        setPassword('Citizen@123456');
+        break;
     }
   };
 
@@ -40,11 +55,19 @@ export default function LoginPage() {
         toast.error(res.error || 'Failed to sign in');
       } else {
         toast.success('Signed in successfully!');
-        if (role === 'ADMIN') {
+        // Fetch current session to get role and redirect to correct portal
+        const sessionRes = await fetch('/api/auth/session');
+        const sessionData = await sessionRes.json();
+        const role = sessionData?.user?.role;
+
+        if (['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'].includes(role)) {
           router.push('/admin/dashboard');
+        } else if (role === 'USER') {
+          router.push('/portal/request-collection');
         } else {
-          router.push('/collector/dashboard');
+          router.push('/collector/collect');
         }
+        router.refresh();
       }
     } catch (err) {
       toast.error('An unexpected error occurred');
@@ -66,11 +89,7 @@ export default function LoginPage() {
             <div className="space-y-6">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-16 bg-gradient-to-b from-yellow-100 to-yellow-300 border border-yellow-500 rounded-t-full flex items-center justify-center p-1 shadow-sm">
-                  <img
-                    src="https://placehold.co/40x50/eab308/000000?text=Emblem"
-                    alt="Emblem"
-                    className="w-full h-full object-contain mix-blend-multiply"
-                  />
+                  <ShieldCheck className="w-8 h-8 text-blue-900" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold uppercase tracking-wider text-yellow-400" style={{ fontFamily: 'Georgia, serif' }}>
@@ -98,8 +117,8 @@ export default function LoginPage() {
                   <p className="text-gray-300 text-[11px]">Full Municipal Coverage</p>
                 </div>
                 <div className="bg-blue-900/50 p-2.5 border border-blue-700 rounded-sm">
-                  <p className="text-lg font-bold text-yellow-400">99.99%</p>
-                  <p className="text-gray-300 text-[11px]">Audit Compliance</p>
+                  <p className="text-lg font-bold text-yellow-400">RBAC Enabled</p>
+                  <p className="text-gray-300 text-[11px]">Commissioner, Sub Admin, Collector, Citizen</p>
                 </div>
               </div>
             </div>
@@ -121,29 +140,51 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              {/* Role Selector Tabs */}
-              <div className="grid grid-cols-2 gap-2 p-1 bg-gray-200 border border-gray-300 rounded-sm">
+              {/* Role Quick Selector Pills */}
+              <div className="flex flex-wrap gap-1.5 p-1.5 bg-gray-200 border border-gray-300 rounded-sm text-[11px]">
                 <button
                   type="button"
-                  onClick={() => handleQuickFill('ADMIN')}
-                  className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-bold uppercase transition-all ${
-                    role === 'ADMIN'
+                  onClick={() => handleQuickFill('COMMISSIONER')}
+                  className={`px-2.5 py-1 font-bold uppercase transition-all ${
+                    selectedRole === 'COMMISSIONER'
                       ? 'bg-[#1e3a8a] text-white shadow-sm'
                       : 'text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  <ShieldCheck className="w-3.5 h-3.5" /> Admin Portal
+                  Commissioner
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickFill('SUB_ADMIN')}
+                  className={`px-2.5 py-1 font-bold uppercase transition-all ${
+                    selectedRole === 'SUB_ADMIN'
+                      ? 'bg-[#1e3a8a] text-white shadow-sm'
+                      : 'text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  Sub Admin
                 </button>
                 <button
                   type="button"
                   onClick={() => handleQuickFill('COLLECTOR')}
-                  className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-bold uppercase transition-all ${
-                    role === 'COLLECTOR'
+                  className={`px-2.5 py-1 font-bold uppercase transition-all ${
+                    selectedRole === 'COLLECTOR'
                       ? 'bg-[#1e3a8a] text-white shadow-sm'
                       : 'text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  <Truck className="w-3.5 h-3.5" /> Collector App
+                  Collector
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickFill('USER')}
+                  className={`px-2.5 py-1 font-bold uppercase transition-all ${
+                    selectedRole === 'USER'
+                      ? 'bg-[#1e3a8a] text-white shadow-sm'
+                      : 'text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  Citizen
                 </button>
               </div>
 
@@ -197,9 +238,9 @@ export default function LoginPage() {
                 </button>
 
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-sm text-xs space-y-1">
-                  <p className="font-bold text-[#1e3a8a]">💡 Demo Credentials Loaded:</p>
+                  <p className="font-bold text-[#1e3a8a]">💡 Quick Fill Credentials ({selectedRole}):</p>
                   <p className="text-gray-700 font-mono text-[11px]">
-                    {role === 'ADMIN' ? 'admin@wastemgmt.gov.in / Admin@123456' : 'collector1@wastemgmt.gov.in / Collector@123456'}
+                    {email} / {password}
                   </p>
                 </div>
               </form>

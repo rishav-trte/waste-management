@@ -7,8 +7,9 @@ import { MunicipalPortalHeader } from '@/components/municipal/MunicipalPortalHea
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
+  const allowedAdminRoles = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'];
 
-  if (!session || session.user.role !== 'ADMIN') {
+  if (!session || !allowedAdminRoles.includes(session.user.role)) {
     redirect('/login');
   }
 

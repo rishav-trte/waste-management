@@ -13,15 +13,36 @@ async function main() {
   await prisma.propertyType.deleteMany({});
   await prisma.user.deleteMany({});
 
-  // 2. Create Users
-  const passwordHash = await bcrypt.hash('Admin@123456', 10);
+  // 2. Create Users for each Role
+  const commissionerHash = await bcrypt.hash('Commissioner@123456', 10);
+  const subAdminHash = await bcrypt.hash('Subadmin@123456', 10);
+  const adminHash = await bcrypt.hash('Admin@123456', 10);
   const collectorHash = await bcrypt.hash('Collector@123456', 10);
+  const citizenHash = await bcrypt.hash('Citizen@123456', 10);
+
+  const commissioner = await prisma.user.create({
+    data: {
+      name: 'Shri Vikram Sharma (Municipal Commissioner)',
+      email: 'commissioner@wastemgmt.gov.in',
+      passwordHash: commissionerHash,
+      role: Role.COMMISSIONER,
+    },
+  });
+
+  const subAdmin = await prisma.user.create({
+    data: {
+      name: 'Anil Gupta (Sub Admin Operations)',
+      email: 'subadmin@wastemgmt.gov.in',
+      passwordHash: subAdminHash,
+      role: Role.SUB_ADMIN,
+    },
+  });
 
   const admin = await prisma.user.create({
     data: {
       name: 'System Administrator',
       email: 'admin@wastemgmt.gov.in',
-      passwordHash: passwordHash,
+      passwordHash: adminHash,
       role: Role.ADMIN,
     },
   });
@@ -35,7 +56,21 @@ async function main() {
     },
   });
 
-  console.log(`✅ Users created: Admin (${admin.email}), Collector (${collector.email})`);
+  const citizen = await prisma.user.create({
+    data: {
+      name: 'Priya Verma (Citizen)',
+      email: 'citizen@wastemgmt.gov.in',
+      passwordHash: citizenHash,
+      role: Role.USER,
+    },
+  });
+
+  console.log(`✅ Users created: 
+  - Commissioner: ${commissioner.email}
+  - Sub Admin: ${subAdmin.email}
+  - Admin: ${admin.email}
+  - Collector: ${collector.email}
+  - Citizen: ${citizen.email}`);
 
   // 3. Create Property Types
   const residential = await prisma.propertyType.create({

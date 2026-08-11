@@ -15,13 +15,34 @@ export async function GET() {
     const properties = await prisma.property.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        propertyType: true,
+        propertyType: {
+          include: {
+            pricingConfigs: {
+              where: { isActive: true },
+              orderBy: { createdAt: 'desc' },
+              take: 1,
+            },
+          },
+        },
         _count: { select: { collections: true } },
       },
     });
 
-    return NextResponse.json({ properties });
+    const formattedProperties = properties.map((p) => {
+      const activePricing = p.propertyType?.pricingConfigs?.[0];
+      return {
+        ...p,
+        propertyType: {
+          ...p.propertyType,
+          activePrice: activePricing?.price ? Number(activePricing.price) : 0,
+          activeUnit: activePricing?.unit || 'per_collection',
+        },
+      };
+    });
+
+    return NextResponse.json({ properties: formattedProperties });
   } catch (error) {
+    console.error('Failed to fetch properties:', error);
     return NextResponse.json({ error: 'Failed to fetch properties' }, { status: 500 });
   }
 }
@@ -29,7 +50,8 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    const allowedRoles = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'];
+    if (!session || !allowedRoles.includes(session.user.role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -48,11 +70,36 @@ export async function POST(req: Request) {
         latitude: parseFloat(latitude || '28.6139'),
         longitude: parseFloat(longitude || '77.2090'),
       },
-      include: { propertyType: true },
+      include: {
+        propertyType: {
+          include: {
+            pricingConfigs: {
+              where: { isActive: true },
+              orderBy: { createdAt: 'desc' },
+              take: 1,
+            },
+          },
+        },
+      },
     });
 
-    return NextResponse.json({ property }, { status: 201 });
+    const activePricing = property.propertyType?.pricingConfigs?.[0];
+
+    return NextResponse.json(
+      {
+        property: {
+          ...property,
+          propertyType: {
+            ...property.propertyType,
+            activePrice: activePricing?.price ? Number(activePricing.price) : 0,
+            activeUnit: activePricing?.unit || 'per_collection',
+          },
+        },
+      },
+      { status: 201 }
+    );
   } catch (error) {
+    console.error('Failed to create property:', error);
     return NextResponse.json({ error: 'Failed to create property' }, { status: 500 });
   }
 }
