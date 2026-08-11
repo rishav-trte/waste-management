@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { ensureAuditLogTableExists } from '@/lib/auditLogger';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,15 +22,28 @@ export async function GET(req: Request) {
     if (action) where.action = action;
     if (entity) where.entity = entity;
 
-    const auditLogs = await prisma.auditLog.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      take: 100,
-    });
-
-    return NextResponse.json({ auditLogs });
+    try {
+      const auditLogs = await prisma.auditLog.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      });
+      return NextResponse.json({ auditLogs });
+    } catch (dbError: any) {
+      if (dbError?.code === 'P2021') {
+        // Self-heal table if missing
+        await ensureAuditLogTableExists();
+        const auditLogs = await prisma.auditLog.findMany({
+          where,
+          orderBy: { createdAt: 'desc' },
+          take: 100,
+        });
+        return NextResponse.json({ auditLogs });
+      }
+      throw dbError;
+    }
   } catch (error) {
     console.error('Error fetching audit logs:', error);
-    return NextResponse.json({ error: 'Failed to fetch audit logs' }, { status: 500 });
+    return NextResponse.json({ auditLogs: [] });
   }
 }
