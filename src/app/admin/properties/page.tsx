@@ -4,16 +4,28 @@ import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Building2, Plus, Phone, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchProperties } from '@/store/slices/propertiesSlice';
+import { fetchPropertyTypes } from '@/store/slices/propertyTypesSlice';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 const PropertyMapClient = dynamic(
   () => import('@/components/admin/PropertyMapClient'),
-  { ssr: false, loading: () => <div className="h-64 w-full bg-slate-900 rounded-2xl animate-pulse flex items-center justify-center text-slate-500 text-xs">Loading GIS Map...</div> }
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 w-full bg-slate-900 rounded-2xl animate-pulse flex items-center justify-center">
+        <LoadingSpinner size="md" label="Initializing GIS Map Engine..." />
+      </div>
+    ),
+  }
 );
 
 export default function PropertiesRegistryPage() {
-  const [properties, setProperties] = useState<any[]>([]);
-  const [propertyTypes, setPropertyTypes] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { items: properties, loading } = useAppSelector((state) => state.properties);
+  const { items: propertyTypes } = useAppSelector((state) => state.propertyTypes);
+
   const [showModal, setShowModal] = useState(false);
 
   // Form state
@@ -25,31 +37,16 @@ export default function PropertiesRegistryPage() {
   const [longitude, setLongitude] = useState('77.2090');
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [resProps, resTypes] = await Promise.all([
-        fetch('/api/admin/properties'),
-        fetch('/api/admin/property-types'),
-      ]);
-      const jsonProps = await resProps.json();
-      const jsonTypes = await resTypes.json();
-
-      setProperties(jsonProps.properties || []);
-      setPropertyTypes(jsonTypes.propertyTypes || []);
-      if (jsonTypes.propertyTypes?.length > 0) {
-        setPropertyTypeId(jsonTypes.propertyTypes[0].id);
-      }
-    } catch (err) {
-      toast.error('Failed to load property registry');
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    dispatch(fetchProperties());
+    dispatch(fetchPropertyTypes());
+  }, [dispatch]);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (propertyTypes.length > 0 && !propertyTypeId) {
+      setPropertyTypeId(propertyTypes[0].id);
+    }
+  }, [propertyTypes, propertyTypeId]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +67,7 @@ export default function PropertiesRegistryPage() {
         setAddress('');
         setPhone('');
         setShowModal(false);
-        fetchData();
+        dispatch(fetchProperties());
       } else {
         toast.error(data.error || 'Failed to register property');
       }
@@ -109,10 +106,7 @@ export default function PropertiesRegistryPage() {
       {/* Property List */}
       {loading ? (
         <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-2xl">
-          <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
-            <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs font-semibold">Loading municipal property registry & GIS coordinates...</span>
-          </div>
+          <LoadingSpinner size="lg" label="Loading municipal property registry & PostGIS spatial coordinates..." />
         </div>
       ) : properties.length === 0 ? (
         <div className="py-12 text-center text-slate-500 bg-slate-900 border border-slate-800 rounded-2xl text-xs">
@@ -244,7 +238,11 @@ export default function PropertiesRegistryPage() {
                 disabled={submitting}
                 className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs rounded-xl shadow-lg shadow-emerald-950/50 transition-all flex items-center justify-center gap-2"
               >
-                {submitting ? 'Registering...' : 'Register Property'}
+                {submitting ? (
+                  <LoadingSpinner size="sm" label="Registering..." />
+                ) : (
+                  'Register Property'
+                )}
               </button>
             </form>
           </div>

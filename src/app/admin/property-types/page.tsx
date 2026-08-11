@@ -1,13 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Tags, Plus, CheckCircle2, IndianRupee, Edit3, Save } from 'lucide-react';
+import { Tags, Plus, CheckCircle2, IndianRupee, Edit3 } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/utils';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchPropertyTypes, updatePropertyTypeInState } from '@/store/slices/propertyTypesSlice';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export default function PropertyTypesPage() {
-  const [types, setTypes] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { items: types, loading } = useAppSelector((state) => state.propertyTypes);
+
   const [showModal, setShowModal] = useState(false);
   const [editingType, setEditingType] = useState<any>(null);
 
@@ -18,22 +22,9 @@ export default function PropertyTypesPage() {
   const [unit, setUnit] = useState('per_collection');
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchTypes = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/admin/property-types');
-      const data = await res.json();
-      setTypes(data.propertyTypes || []);
-    } catch (err) {
-      toast.error('Failed to load property types');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchTypes();
-  }, []);
+    dispatch(fetchPropertyTypes());
+  }, [dispatch]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,8 +46,11 @@ export default function PropertyTypesPage() {
 
       if (res.ok) {
         toast.success(editingType ? 'Property category updated!' : 'Property category created!');
+        if (data.propertyType) {
+          dispatch(updatePropertyTypeInState(data.propertyType));
+        }
         resetForm();
-        fetchTypes();
+        dispatch(fetchPropertyTypes());
       } else {
         toast.error(data.error || 'Failed to save');
       }
@@ -108,10 +102,7 @@ export default function PropertyTypesPage() {
       {/* Grid of Property Types */}
       {loading ? (
         <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-2xl">
-          <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
-            <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs font-semibold">Loading municipal property categories & tariff prices...</span>
-          </div>
+          <LoadingSpinner size="lg" label="Fetching municipal property classifications & tariff rates..." />
         </div>
       ) : types.length === 0 ? (
         <div className="py-12 text-center text-slate-500 bg-slate-900 border border-slate-800 rounded-2xl text-xs">
@@ -132,7 +123,7 @@ export default function PropertyTypesPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => openEditModal(t)}
-                      className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all text-xs flex items-center gap-1"
+                      className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all text-xs flex items-center gap-1 font-semibold"
                     >
                       <Edit3 className="w-3.5 h-3.5" /> Edit
                     </button>
@@ -238,7 +229,13 @@ export default function PropertyTypesPage() {
                 disabled={submitting}
                 className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs rounded-xl shadow-lg shadow-emerald-950/50 transition-all flex items-center justify-center gap-2"
               >
-                {submitting ? 'Saving...' : editingType ? 'Update Category & Tariff' : 'Save Property Category'}
+                {submitting ? (
+                  <LoadingSpinner size="sm" label="Saving Tariff Changes..." />
+                ) : editingType ? (
+                  'Update Category & Tariff'
+                ) : (
+                  'Save Property Category'
+                )}
               </button>
             </form>
           </div>

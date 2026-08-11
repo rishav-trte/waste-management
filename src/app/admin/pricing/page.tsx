@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Receipt, Plus, CheckCircle2, History, IndianRupee } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export default function PricingConfigPage() {
   const [configs, setConfigs] = useState<any[]>([]);
@@ -113,10 +114,7 @@ export default function PricingConfigPage() {
               {loading ? (
                 <tr>
                   <td colSpan={5} className="py-12 text-center">
-                    <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
-                      <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-                      <span className="text-xs font-semibold">Loading tariff & pricing configurations...</span>
-                    </div>
+                    <LoadingSpinner size="md" label="Loading tariff & pricing configurations..." />
                   </td>
                 </tr>
               ) : configs.length === 0 ? (

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { LifeBuoy, CheckCircle2, Clock, MessageSquare, AlertCircle, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export default function AdminSupportDeskPage() {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -66,10 +67,7 @@ export default function AdminSupportDeskPage() {
       <div className="grid grid-cols-1 gap-4">
         {loading ? (
           <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-2xl">
-            <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
-              <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-              <span className="text-xs font-semibold">Loading support tickets...</span>
-            </div>
+            <LoadingSpinner size="lg" label="Loading support desk tickets..." />
           </div>
         ) : tickets.length === 0 ? (
           <div className="p-8 bg-slate-900 border border-slate-800 rounded-2xl text-center text-xs text-slate-400">

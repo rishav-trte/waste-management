@@ -1,39 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Truck, CheckCircle2, Clock, User, Calendar, MapPin, ShieldCheck, AlertCircle } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { MapPin } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchWasteRequests, updateWasteRequestStatus } from '@/store/slices/wasteRequestsSlice';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export default function SubAdminWasteRequestsPage() {
-  const [requests, setRequests] = useState<any[]>([]);
-  const [collectors, setCollectors] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedCollector, setSelectedCollector] = useState<{ [reqId: string]: string }>({});
-
-  const fetchRequests = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/portal/waste-requests');
-      const data = await res.json();
-      setRequests(data.requests || []);
-    } catch (err) {
-      toast.error('Failed to load waste requests');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const dispatch = useAppDispatch();
+  const { items: requests, loading } = useAppSelector((state) => state.wasteRequests);
 
   useEffect(() => {
-    fetchRequests();
-
-    // Fetch field collectors for assignment dropdown
-    fetch('/api/admin/collections')
-      .then((res) => res.json())
-      .then((data) => {
-        // Collect unique collectors or mock list
-      })
-      .catch(() => {});
-  }, []);
+    dispatch(fetchWasteRequests());
+  }, [dispatch]);
 
   const handleUpdateStatus = async (id: string, newStatus: string, collectorId?: string) => {
     try {
@@ -45,7 +25,8 @@ export default function SubAdminWasteRequestsPage() {
 
       if (res.ok) {
         toast.success(`Request status updated to ${newStatus}`);
-        fetchRequests();
+        dispatch(updateWasteRequestStatus({ id, status: newStatus }));
+        dispatch(fetchWasteRequests());
       } else {
         toast.error('Failed to update status');
       }
@@ -84,10 +65,7 @@ export default function SubAdminWasteRequestsPage() {
               {loading ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
-                    <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
-                      <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-                      <span className="text-xs font-semibold">Fetching citizen waste pickup requests...</span>
-                    </div>
+                    <LoadingSpinner size="md" label="Fetching citizen waste pickup dispatch queue..." />
                   </td>
                 </tr>
               ) : requests.length === 0 ? (

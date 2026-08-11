@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { NextAuthProvider } from '@/components/providers/NextAuthProvider';
+import { ReduxProvider } from '@/store/provider';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -16,10 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="font-sans antialiased h-full bg-slate-50 text-slate-900">
-        <NextAuthProvider>
-          {children}
-          <Toaster position="top-right" richColors />
-        </NextAuthProvider>
+        <ReduxProvider>
+          <NextAuthProvider>
+            {children}
+            <Toaster position="top-right" richColors />
+          </NextAuthProvider>
+        </ReduxProvider>
       </body>
     </html>
   );
