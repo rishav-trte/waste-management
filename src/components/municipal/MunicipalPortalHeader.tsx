@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { TopBar } from './TopBar';
 import { TextScale } from '@/types/municipal';
 import { PORTAL_TITLE, PORTAL_SUBTITLE } from './data';
+import { signOut, useSession } from 'next-auth/react';
+import { LogOut, UserCheck } from 'lucide-react';
 
 interface MunicipalPortalHeaderProps {
   portalTitle?: string;
@@ -17,10 +19,11 @@ export const MunicipalPortalHeader: React.FC<MunicipalPortalHeaderProps> = ({
 }) => {
   const [textScale, setTextScale] = useState<TextScale>('normal');
   const [isHighContrast, setIsHighContrast] = useState<boolean>(false);
+  const { data: session } = useSession();
 
   return (
     <header className="w-full border-b shadow-sm">
-      {/* Top Bar for Accessibility */}
+      {/* Top Bar for Accessibility & Global Sign Out */}
       <TopBar
         textScale={textScale}
         setTextScale={setTextScale}
@@ -65,12 +68,34 @@ export const MunicipalPortalHeader: React.FC<MunicipalPortalHeaderProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <img
-              src="https://placehold.co/100x40/ffffff/1e3a8a?text=Swachh+Bharat"
-              alt="Swachh Bharat"
-              className="h-9 border border-gray-200 hidden sm:block"
-            />
+          {/* User Status & Mobile / Desktop Sign Out Button */}
+          <div className="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-2 sm:pt-0 border-gray-200">
+            {session?.user ? (
+              <div className="flex items-center gap-2">
+                <div className="text-right">
+                  <p className="text-xs font-bold text-slate-800 truncate max-w-[140px] sm:max-w-[180px]">
+                    {session.user.name}
+                  </p>
+                  <p className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">
+                    {session.user.role}
+                  </p>
+                </div>
+                <button
+                  onClick={() => signOut({ callbackUrl: '/login' })}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-700 hover:bg-red-800 text-white text-xs font-bold uppercase tracking-wider rounded transition-all shadow-sm shrink-0"
+                  title="Sign Out of Session"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            ) : (
+              <img
+                src="https://placehold.co/100x40/ffffff/1e3a8a?text=Swachh+Bharat"
+                alt="Swachh Bharat"
+                className="h-9 border border-gray-200 hidden sm:block"
+              />
+            )}
           </div>
         </div>
       </div>
