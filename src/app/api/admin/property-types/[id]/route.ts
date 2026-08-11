@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { logAuditAction } from '@/lib/auditLogger';
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
@@ -39,6 +40,18 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         },
       });
     }
+
+    // Audit Log
+    await logAuditAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      role: session.user.role,
+      action: 'UPDATE_PROPERTY_TYPE',
+      entity: 'PropertyType',
+      entityId: id,
+      details: `Updated Property Category '${name}' tariff to ₹${price}/${unit || 'collection'}`,
+    });
 
     return NextResponse.json({
       propertyType: {

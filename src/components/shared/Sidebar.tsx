@@ -25,6 +25,7 @@ const navItems = [
   { href: '/admin/excel-upload', label: 'Excel Bulk Importer', icon: FileSpreadsheet },
   { href: '/admin/waste-requests', label: 'Waste Collection Requests', icon: Truck },
   { href: '/admin/support', label: 'Support Desk (Freshdesk)', icon: LifeBuoy },
+  { href: '/admin/audit-logs', label: 'Audit Trail Logs', icon: History },
   { href: '/admin/collections', label: 'Collections Audit', icon: MapPin },
 ];
 

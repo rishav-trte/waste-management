@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { PaymentStatus, PaymentMethod } from '@prisma/client';
+import { logAuditAction } from '@/lib/auditLogger';
 
 export async function POST(req: Request) {
   try {
@@ -59,6 +60,18 @@ export async function POST(req: Request) {
         property: { include: { propertyType: true } },
         pricingConfig: true,
       },
+    });
+
+    // Audit Log
+    await logAuditAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      role: session.user.role,
+      action: 'LOG_COLLECTION',
+      entity: 'Collection',
+      entityId: newCollection.id,
+      details: `Logged collection ₹${amount} (${pMethod}) for property '${property.ownerName}'`,
     });
 
     return NextResponse.json({ collection: newCollection }, { status: 201 });

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { logAuditAction } from '@/lib/auditLogger';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,6 +66,18 @@ export async function POST(req: Request) {
         unit: unit || 'per_collection',
         isActive: true,
       },
+    });
+
+    // Log Audit Trail
+    await logAuditAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      role: session.user.role,
+      action: 'CREATE_PROPERTY_TYPE',
+      entity: 'PropertyType',
+      entityId: newType.id,
+      details: `Created Property Category '${name}' with tariff ₹${parsedPrice}/${unit || 'per_collection'}`,
     });
 
     return NextResponse.json(

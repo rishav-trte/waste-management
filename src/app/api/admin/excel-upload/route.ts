@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import * as XLSX from 'xlsx';
 import bcrypt from 'bcryptjs';
 import { Role } from '@prisma/client';
+import { logAuditAction } from '@/lib/auditLogger';
 
 export async function POST(req: Request) {
   try {
@@ -120,6 +121,17 @@ export async function POST(req: Request) {
         }
       }
     }
+
+    // Audit Log for Excel Import
+    await logAuditAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      role: session.user.role,
+      action: 'EXCEL_BULK_IMPORT',
+      entity: 'ExcelFile',
+      details: `Bulk imported '${file.name}': ${createdPropertiesCount} properties, ${createdTypesCount} property categories, ${createdUsersCount} users created`,
+    });
 
     return NextResponse.json({
       success: true,
