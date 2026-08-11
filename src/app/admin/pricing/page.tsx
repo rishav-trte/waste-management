@@ -110,33 +110,50 @@ export default function PricingConfigPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60 text-slate-300">
-              {configs.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-800/40 transition-all">
-                  <td className="py-3.5 px-4 font-bold text-white">{c.propertyType?.name}</td>
-                  <td className="py-3.5 px-4 font-extrabold text-emerald-400 text-sm">
-                    {formatCurrency(c.price)}
-                  </td>
-                  <td className="py-3.5 px-4">
-                    <span className="px-2.5 py-1 bg-slate-800 text-slate-300 rounded-md font-medium text-[11px]">
-                      {c.unit}
-                    </span>
-                  </td>
-                  <td className="py-3.5 px-4 text-slate-400">
-                    {formatDate(c.effectiveFrom)} → {c.effectiveTo ? formatDate(c.effectiveTo) : 'Present (Active)'}
-                  </td>
-                  <td className="py-3.5 px-4">
-                    {c.isActive ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full font-semibold text-[10px]">
-                        <CheckCircle2 className="w-3 h-3" /> ACTIVE
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-800 text-slate-500 rounded-full font-semibold text-[10px]">
-                        <History className="w-3 h-3" /> ARCHIVED
-                      </span>
-                    )}
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center">
+                    <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
+                      <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                      <span className="text-xs font-semibold">Loading tariff & pricing configurations...</span>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              ) : configs.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-8 text-center text-slate-500">
+                    No pricing configurations created yet.
+                  </td>
+                </tr>
+              ) : (
+                configs.map((c) => (
+                  <tr key={c.id} className="hover:bg-slate-800/40 transition-all">
+                    <td className="py-3.5 px-4 font-bold text-white">{c.propertyType?.name}</td>
+                    <td className="py-3.5 px-4 font-extrabold text-emerald-400 text-sm">
+                      {formatCurrency(c.price)}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <span className="px-2.5 py-1 bg-slate-800 text-slate-300 rounded-md font-medium text-[11px]">
+                        {c.unit}
+                      </span>
+                    </td>
+                    <td className="py-3.5 px-4 text-slate-400">
+                      {formatDate(c.effectiveFrom)} → {c.effectiveTo ? formatDate(c.effectiveTo) : 'Present (Active)'}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      {c.isActive ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full font-semibold text-[10px]">
+                          <CheckCircle2 className="w-3 h-3" /> ACTIVE
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-800 text-slate-500 rounded-full font-semibold text-[10px]">
+                          <History className="w-3 h-3" /> ARCHIVED
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

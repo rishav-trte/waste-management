@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { WasteRequestStatus } from '@prisma/client';
+import { logAuditAction } from '@/lib/auditLogger';
 
 export async function GET() {
   try {
@@ -64,6 +65,18 @@ export async function POST(req: Request) {
       },
     });
 
+    // Audit Log Entry
+    await logAuditAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      role: session.user.role,
+      action: 'CREATE_WASTE_REQUEST',
+      entity: 'WasteRequest',
+      entityId: newRequest.id,
+      details: `Scheduled ${wasteType} pickup request at '${address}' for ${new Date(preferredDate).toLocaleDateString()}`,
+    });
+
     return NextResponse.json({ request: newRequest }, { status: 201 });
   } catch (error) {
     console.error('Error creating waste request:', error);
@@ -92,6 +105,18 @@ export async function PUT(req: Request) {
         propertyType: true,
         collector: { select: { id: true, name: true, email: true } },
       },
+    });
+
+    // Audit Log Entry
+    await logAuditAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      role: session.user.role,
+      action: 'UPDATE_WASTE_REQUEST',
+      entity: 'WasteRequest',
+      entityId: updated.id,
+      details: `Updated Waste Pickup Request status to '${status}'`,
     });
 
     return NextResponse.json({ request: updated });

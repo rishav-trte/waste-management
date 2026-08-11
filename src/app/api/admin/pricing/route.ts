@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { logAuditAction } from '@/lib/auditLogger';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,8 +58,21 @@ export async function POST(req: Request) {
       include: { propertyType: true },
     });
 
+    // Log Audit Trail Entry
+    await logAuditAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      role: session.user.role,
+      action: 'UPDATE_PRICING_CONFIG',
+      entity: 'PricingConfig',
+      entityId: newConfig.id,
+      details: `Updated Tariff Price for '${newConfig.propertyType?.name}' to ₹${newConfig.price} (${newConfig.unit})`,
+    });
+
     return NextResponse.json({ pricingConfig: newConfig }, { status: 201 });
   } catch (error) {
+    console.error('Error creating pricing configuration:', error);
     return NextResponse.json({ error: 'Failed to create pricing configuration' }, { status: 500 });
   }
 }

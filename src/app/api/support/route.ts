@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { TicketCategory, TicketStatus } from '@prisma/client';
+import { logAuditAction } from '@/lib/auditLogger';
 
 export async function GET() {
   try {
@@ -80,6 +81,18 @@ export async function POST(req: Request) {
       },
     });
 
+    // Audit Log Entry
+    await logAuditAction({
+      userId: session?.user?.id,
+      userEmail: email,
+      userName: name,
+      role: session?.user?.role || null,
+      action: 'CREATE_SUPPORT_TICKET',
+      entity: 'SupportTicket',
+      entityId: ticket.id,
+      details: `Created Support Ticket '${subject}' under category '${category}'`,
+    });
+
     return NextResponse.json({ ticket, message: 'Support ticket submitted successfully!' }, { status: 201 });
   } catch (error) {
     console.error('Error submitting support ticket:', error);
@@ -103,6 +116,18 @@ export async function PUT(req: Request) {
         ...(status && { status: status as TicketStatus }),
         ...(adminNotes !== undefined && { adminNotes }),
       },
+    });
+
+    // Audit Log Entry
+    await logAuditAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      role: session.user.role,
+      action: 'UPDATE_SUPPORT_TICKET',
+      entity: 'SupportTicket',
+      entityId: updated.id,
+      details: `Updated Support Ticket status to '${status}'`,
     });
 
     return NextResponse.json({ ticket: updated });

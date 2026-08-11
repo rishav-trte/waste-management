@@ -106,53 +106,66 @@ export default function PropertyTypesPage() {
       </div>
 
       {/* Grid of Property Types */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {types.map((t) => (
-          <div
-            key={t.id}
-            className="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 relative group hover:border-emerald-500/50 transition-all flex flex-col justify-between"
-          >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
-                  <Tags className="w-5 h-5" />
+      {loading ? (
+        <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-2xl">
+          <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
+            <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs font-semibold">Loading municipal property categories & tariff prices...</span>
+          </div>
+        </div>
+      ) : types.length === 0 ? (
+        <div className="py-12 text-center text-slate-500 bg-slate-900 border border-slate-800 rounded-2xl text-xs">
+          No property categories defined yet.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {types.map((t) => (
+            <div
+              key={t.id}
+              className="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 relative group hover:border-emerald-500/50 transition-all flex flex-col justify-between"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
+                    <Tags className="w-5 h-5" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => openEditModal(t)}
+                      className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all text-xs flex items-center gap-1"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" /> Edit
+                    </button>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      <CheckCircle2 className="w-3 h-3" /> Active
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => openEditModal(t)}
-                    className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all text-xs flex items-center gap-1"
-                  >
-                    <Edit3 className="w-3.5 h-3.5" /> Edit
-                  </button>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                    <CheckCircle2 className="w-3 h-3" /> Active
+
+                <div>
+                  <h3 className="text-lg font-bold text-white">{t.name}</h3>
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">{t.description || 'No description provided.'}</p>
+                </div>
+
+                {/* Price badge */}
+                <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                    <IndianRupee className="w-3.5 h-3.5 text-emerald-400" /> Active Tariff:
+                  </div>
+                  <span className="text-sm font-extrabold text-emerald-400">
+                    {formatCurrency(t.activePrice || 0)} <span className="text-[10px] text-slate-400 font-normal">/ {t.activeUnit || 'collection'}</span>
                   </span>
                 </div>
               </div>
 
-              <div>
-                <h3 className="text-lg font-bold text-white">{t.name}</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{t.description || 'No description provided.'}</p>
-              </div>
-
-              {/* Price badge */}
-              <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                  <IndianRupee className="w-3.5 h-3.5 text-emerald-400" /> Active Tariff:
-                </div>
-                <span className="text-sm font-extrabold text-emerald-400">
-                  {formatCurrency(t.activePrice || 0)} <span className="text-[10px] text-slate-400 font-normal">/ {t.activeUnit || 'collection'}</span>
-                </span>
+              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                <span>{t._count?.properties || 0} Registered Properties</span>
+                <span>{t._count?.pricingConfigs || 0} Pricing Revisions</span>
               </div>
             </div>
-
-            <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-              <span>{t._count?.properties || 0} Registered Properties</span>
-              <span>{t._count?.pricingConfigs || 0} Pricing Revisions</span>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Modal for Creating / Editing Property Type & Price */}
       {showModal && (

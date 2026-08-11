@@ -81,7 +81,16 @@ export default function SubAdminWasteRequestsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60 text-slate-300">
-              {requests.length === 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center">
+                    <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
+                      <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                      <span className="text-xs font-semibold">Fetching citizen waste pickup requests...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : requests.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-8 text-center text-slate-500">
                     No active citizen collection requests logged.

@@ -64,7 +64,14 @@ export default function AdminSupportDeskPage() {
 
       {/* Tickets List */}
       <div className="grid grid-cols-1 gap-4">
-        {tickets.length === 0 ? (
+        {loading ? (
+          <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-2xl">
+            <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
+              <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs font-semibold">Loading support tickets...</span>
+            </div>
+          </div>
+        ) : tickets.length === 0 ? (
           <div className="p-8 bg-slate-900 border border-slate-800 rounded-2xl text-center text-xs text-slate-400">
             No support tickets logged in system.
           </div>

@@ -107,34 +107,47 @@ export default function PropertiesRegistryPage() {
       </div>
 
       {/* Property List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {properties.map((p) => (
-          <div key={p.id} className="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 hover:border-emerald-500/40 transition-all">
-            <div className="flex items-center justify-between">
-              <div className="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
-                <Building2 className="w-5 h-5" />
-              </div>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-emerald-400 border border-slate-700">
-                {p.propertyType?.name || 'Property'}
-              </span>
-            </div>
-
-            <div>
-              <h3 className="text-base font-bold text-white">{p.ownerName}</h3>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">{p.address}</p>
-            </div>
-
-            <div className="pt-3 border-t border-slate-800/80 space-y-1.5 text-xs text-slate-400">
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-slate-500" /> {p.phone || 'No phone recorded'}
-              </div>
-              <div className="flex items-center gap-2 font-mono text-[11px]">
-                <MapPin className="w-3.5 h-3.5 text-slate-500" /> {p.latitude.toFixed(4)}, {p.longitude.toFixed(4)}
-              </div>
-            </div>
+      {loading ? (
+        <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-2xl">
+          <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
+            <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs font-semibold">Loading municipal property registry & GIS coordinates...</span>
           </div>
-        ))}
-      </div>
+        </div>
+      ) : properties.length === 0 ? (
+        <div className="py-12 text-center text-slate-500 bg-slate-900 border border-slate-800 rounded-2xl text-xs">
+          No municipal properties registered yet.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {properties.map((p) => (
+            <div key={p.id} className="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 hover:border-emerald-500/40 transition-all">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
+                  <Building2 className="w-5 h-5" />
+                </div>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-emerald-400 border border-slate-700">
+                  {p.propertyType?.name || 'Property'}
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-base font-bold text-white">{p.ownerName}</h3>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{p.address}</p>
+              </div>
+
+              <div className="pt-3 border-t border-slate-800/80 space-y-1.5 text-xs text-slate-400">
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-slate-500" /> {p.phone || 'No phone recorded'}
+                </div>
+                <div className="flex items-center gap-2 font-mono text-[11px]">
+                  <MapPin className="w-3.5 h-3.5 text-slate-500" /> {p.latitude.toFixed(4)}, {p.longitude.toFixed(4)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Modal for Registering Property */}
       {showModal && (
