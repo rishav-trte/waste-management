@@ -180,7 +180,7 @@ export default function NewCollectionPage() {
     <div className="space-y-5 pb-12">
       {/* Title */}
       <div className="space-y-1">
-        <h2 className="text-xl font-bold text-white tracking-tight">Record Collection</h2>
+        <h2 className="text-xl font-bold text-black tracking-tight">Record Collection</h2>
         <p className="text-xs text-slate-400">Log municipal waste collection & process instant billing.</p>
       </div>
 
