@@ -9,35 +9,13 @@ import { MunicipalPortalHeader } from '@/components/municipal/MunicipalPortalHea
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('commissioner@wastemgmt.gov.in');
-  const [password, setPassword] = useState('Commissioner@123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [selectedRole, setSelectedRole] = useState<'COMMISSIONER' | 'SUB_ADMIN' | 'ADMIN' | 'COLLECTOR' | 'USER'>('COMMISSIONER');
   const [loading, setLoading] = useState(false);
 
   const handleQuickFill = (targetRole: 'COMMISSIONER' | 'SUB_ADMIN' | 'ADMIN' | 'COLLECTOR' | 'USER') => {
     setSelectedRole(targetRole);
-    switch (targetRole) {
-      case 'COMMISSIONER':
-        setEmail('commissioner@wastemgmt.gov.in');
-        setPassword('Commissioner@123456');
-        break;
-      case 'SUB_ADMIN':
-        setEmail('subadmin@wastemgmt.gov.in');
-        setPassword('Subadmin@123456');
-        break;
-      case 'ADMIN':
-        setEmail('admin@wastemgmt.gov.in');
-        setPassword('Admin@123456');
-        break;
-      case 'COLLECTOR':
-        setEmail('collector1@wastemgmt.gov.in');
-        setPassword('Collector@123456');
-        break;
-      case 'USER':
-        setEmail('citizen@wastemgmt.gov.in');
-        setPassword('Citizen@123456');
-        break;
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -237,12 +215,12 @@ export default function LoginPage() {
                   )}
                 </button>
 
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded-sm text-xs space-y-1">
+                {/* <div className="p-3 bg-blue-50 border border-blue-200 rounded-sm text-xs space-y-1">
                   <p className="font-bold text-[#1e3a8a]">💡 Quick Fill Credentials ({selectedRole}):</p>
                   <p className="text-gray-700 font-mono text-[11px]">
                     {email} / {password}
                   </p>
-                </div>
+                </div> */}
               </form>
             </div>
           </div>
