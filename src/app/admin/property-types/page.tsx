@@ -83,7 +83,7 @@ export default function PropertyTypesPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">Property Categories & Pricing</h1>
+          <h1 className="text-2xl font-extrabold text-black tracking-tight">Property Categories & Pricing</h1>
           <p className="text-xs text-slate-400 mt-1">
             Define municipal property classifications and set dynamic collection pricing per property type.
           </p>

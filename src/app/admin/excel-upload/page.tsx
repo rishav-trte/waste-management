@@ -72,7 +72,7 @@ export default function ExcelUploadPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">Excel Bulk Data Importer</h1>
+          <h1 className="text-2xl font-extrabold text-black tracking-tight">Excel Bulk Data Importer</h1>
           <p className="text-xs text-slate-400 mt-1">
             Sub-Admin tool to populate properties, property category tariffs, and user accounts via spreadsheet upload.
           </p>

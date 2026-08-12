@@ -12,7 +12,7 @@ export function CollectorNav() {
 
   return (
     <header className="bg-[#1e3a8a] border-b-2 border-[#f97316] text-white sticky top-0 z-30 shadow-md">
-      <div className="max-w-md mx-auto px-4 py-2.5 flex items-center justify-between">
+      {/* <div className="max-w-md mx-auto px-4 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-9 bg-gradient-to-b from-yellow-100 to-yellow-300 border border-yellow-500 rounded-t-full flex items-center justify-center p-0.5 shadow-sm shrink-0">
             <img
@@ -43,7 +43,7 @@ export function CollectorNav() {
             <LogOut className="w-3.5 h-3.5" />
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Mobile Tab Navigation */}
       <nav className="max-w-md mx-auto grid grid-cols-2 border-t border-blue-800 bg-[#0f172a]">

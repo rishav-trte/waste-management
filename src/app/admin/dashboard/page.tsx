@@ -57,7 +57,7 @@ export default function AdminDashboardPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">Executive Operations Dashboard</h1>
+          <h1 className="text-2xl font-extrabold text-black tracking-tight">Executive Operations Dashboard</h1>
           <p className="text-xs text-slate-400 mt-1">
             Real-time municipal waste collection statistics, spatial telemetry, and dynamic tariff audit logs.
           </p>

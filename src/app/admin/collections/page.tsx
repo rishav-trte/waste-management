@@ -46,7 +46,7 @@ export default function CollectionsAuditPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">Collection Audit Log</h1>
+          <h1 className="text-2xl font-extrabold text-black tracking-tight">Collection Audit Log</h1>
           <p className="text-xs text-slate-400 mt-1">
             Server-side cursor-paginated record browser optimized for high-volume government operational data.
           </p>

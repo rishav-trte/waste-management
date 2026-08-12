@@ -30,7 +30,7 @@ export default function CollectorHistoryPage() {
     <div className="space-y-4 pb-12">
       <div className="flex items-center justify-between border-b border-slate-800 pb-3">
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Your Activity Log</h2>
+          <h2 className="text-xl font-bold text-black tracking-tight">Your Activity Log</h2>
           <p className="text-xs text-slate-400">Past collections logged by your account.</p>
         </div>
 
