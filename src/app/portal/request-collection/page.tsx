@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Truck, Calendar, MapPin, Layers, CheckCircle2, ArrowRight, ShieldCheck, Navigation } from 'lucide-react';
+import { Truck, Calendar, MapPin, Layers, CheckCircle2, ArrowRight, ShieldCheck, Navigation, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/react';
+import { MunicipalPortalHeader } from '@/components/municipal/MunicipalPortalHeader';
 
 
 export default function CitizenRequestPage() {
+  const { data: session } = useSession();
   const [propertyTypes, setPropertyTypes] = useState<any[]>([]);
   const [address, setAddress] = useState('');
   const [latitude, setLatitude] = useState<string>('');
@@ -119,20 +122,22 @@ export default function CitizenRequestPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-8">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-900 to-indigo-950 border border-blue-800 rounded-3xl p-6 sm:p-8 text-white space-y-3 shadow-xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-400/20 text-yellow-300 rounded-full text-xs font-bold border border-yellow-400/30">
-          <Truck className="w-4 h-4" /> Citizen Municipal Portal
+    <div className="min-h-screen bg-slate-950 flex flex-col font-sans">
+      <MunicipalPortalHeader
+        portalTitle="Citizen Municipal Portal"
+        portalSubtitle="On-Demand Waste Pickup Request"
+      />
+      
+      <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+        <div className="space-y-2">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Schedule Pickup</h1>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
+            Schedule doorstep waste collection with GPS coordinates for precise collection team routing.
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">On-Demand Waste Pickup Request</h1>
-        <p className="text-xs sm:text-sm text-blue-200 max-w-xl leading-relaxed">
-          Schedule doorstep waste collection with GPS coordinates for precise collection team routing.
-        </p>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Request Form */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Request Form */}
         <form onSubmit={handleSubmit} className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-5 shadow-xl">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Layers className="w-5 h-5 text-emerald-400" /> Schedule Pickup Slot & Coordinates
@@ -305,8 +310,9 @@ export default function CitizenRequestPage() {
               ))
             )}
           </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
