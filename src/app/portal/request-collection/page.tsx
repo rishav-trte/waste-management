@@ -11,6 +11,7 @@ import { MunicipalPortalHeader } from '@/components/municipal/MunicipalPortalHea
 export default function CitizenRequestPage() {
   const { data: session } = useSession();
   const [propertyTypes, setPropertyTypes] = useState<any[]>([]);
+  const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [latitude, setLatitude] = useState<string>('');
   const [longitude, setLongitude] = useState<string>('');
@@ -92,6 +93,7 @@ export default function CitizenRequestPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          phone,
           address,
           latitude,
           longitude,
@@ -106,6 +108,7 @@ export default function CitizenRequestPage() {
 
       if (res.ok) {
         toast.success('On-demand waste pickup scheduled!');
+        setPhone('');
         setAddress('');
         setLatitude('');
         setLongitude('');
@@ -167,7 +170,18 @@ export default function CitizenRequestPage() {
           </h2>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Property Location / Address</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1.5">Phone Number</label>
+            <input
+              type="text"
+              placeholder="e.g. +91 9876543210"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1.5">Property Location / Address *</label>
             <textarea
               required
               rows={2}
