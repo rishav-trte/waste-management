@@ -5,12 +5,6 @@ import { Truck, Calendar, MapPin, Layers, CheckCircle2, ArrowRight, ShieldCheck,
 import { toast } from 'sonner';
 import Link from 'next/link';
 
-const wasteCategories = [
-  { id: 'Dry & Recyclable', label: 'Dry & Recyclables', icon: '♻️', desc: 'Paper, cardboard, plastic bottles, glass' },
-  { id: 'Wet & Organic', label: 'Wet / Organic Food Waste', icon: '🥬', desc: 'Kitchen scraps, garden waste, compostables' },
-  { id: 'Hazardous / E-Waste', label: 'E-Waste & Bio-Hazardous', icon: '🔋', desc: 'Batteries, electronics, medical items' },
-  { id: 'Bulk / Debris', label: 'Bulk Construction Debris', icon: '🏗️', desc: 'Furniture, renovation rubble, trees' },
-];
 
 export default function CitizenRequestPage() {
   const [propertyTypes, setPropertyTypes] = useState<any[]>([]);
@@ -20,7 +14,8 @@ export default function CitizenRequestPage() {
   const [gpsLoading, setGpsLoading] = useState(false);
 
   const [propertyTypeId, setPropertyTypeId] = useState('');
-  const [wasteType, setWasteType] = useState('Dry & Recyclable');
+  const [wasteCategories, setWasteCategories] = useState<any[]>([]);
+  const [wasteType, setWasteType] = useState('');
   const [preferredDate, setPreferredDate] = useState('');
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -33,6 +28,14 @@ export default function CitizenRequestPage() {
         const types = data.propertyTypes || [];
         setPropertyTypes(types);
         if (types.length > 0) setPropertyTypeId(types[0].id);
+      });
+
+    fetch('/api/admin/waste-categories')
+      .then((res) => res.json())
+      .then((data) => {
+        const activeCategories = (data.categories || []).filter((c: any) => c.isActive);
+        setWasteCategories(activeCategories);
+        if (activeCategories.length > 0) setWasteType(activeCategories[0].name);
       });
 
     fetchRequests();
@@ -226,15 +229,15 @@ export default function CitizenRequestPage() {
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => setWasteType(c.id)}
+                  onClick={() => setWasteType(c.name)}
                   className={`p-3 rounded-xl border text-left text-xs transition-all flex flex-col justify-between ${
-                    wasteType === c.id
+                    wasteType === c.name
                       ? 'bg-emerald-950/60 border-emerald-500 text-white shadow-md'
                       : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
                   }`}
                 >
                   <div className="text-base mb-1">{c.icon}</div>
-                  <span className="font-bold text-[11px] block">{c.label}</span>
+                  <span className="font-bold text-[11px] block">{c.name}</span>
                 </button>
               ))}
             </div>

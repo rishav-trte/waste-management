@@ -208,3 +208,13 @@ model AuditLog {
   @@index([action])
   @@index([entity])
 }
+
+model WasteCategory {
+  id  String  @id @default(uuid())
+  name  String  @unique // e.g., "Dry & Recyclable"
+  icon  String? 
+  desc  String?
+  isActive Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

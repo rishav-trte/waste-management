@@ -11,6 +11,7 @@ async function main() {
   await prisma.property.deleteMany({});
   await prisma.pricingConfig.deleteMany({});
   await prisma.propertyType.deleteMany({});
+  await prisma.wasteCategory.deleteMany({});
   await prisma.user.deleteMany({});
 
   // 2. Create Users for each Role
@@ -102,6 +103,19 @@ async function main() {
   });
 
   console.log('✅ Property Types created');
+
+  // 3.5 Create Waste Categories
+  const wasteCategories = [
+    { name: 'Dry & Recyclables', icon: '♻️', desc: 'Paper, cardboard, plastic bottles, glass' },
+    { name: 'Wet / Organic Food Waste', icon: '🥬', desc: 'Kitchen scraps, garden waste, compostables' },
+    { name: 'E-Waste & Bio-Hazardous', icon: '🔋', desc: 'Batteries, electronics, medical items' },
+    { name: 'Bulk Construction Debris', icon: '🏗️', desc: 'Furniture, renovation rubble, trees' },
+  ];
+
+  await prisma.wasteCategory.createMany({
+    data: wasteCategories,
+  });
+  console.log('✅ Waste Categories created');
 
   // 4. Create Pricing Configurations
   const priceRes = await prisma.pricingConfig.create({
