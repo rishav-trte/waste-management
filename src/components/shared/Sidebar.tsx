@@ -68,13 +68,6 @@ export function Sidebar() {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => signOut({ callbackUrl: '/login' })}
-            className="flex items-center gap-1 px-2.5 py-1 bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold uppercase rounded transition-all"
-            title="Sign Out"
-          >
-            <LogOut className="w-3.5 h-3.5" /> Sign Out
-          </button>
-          <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-1.5 bg-blue-900 text-white rounded focus:outline-none"
           >
