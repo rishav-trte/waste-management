@@ -13,7 +13,7 @@ export async function GET() {
     }
 
     const { role, id: userId } = session.user;
-    const isStaff = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'].includes(role);
+    const isStaff = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN', 'COLLECTOR'].includes(role);
 
     const requests = await prisma.wasteRequest.findMany({
       where: isStaff ? {} : { userId },
@@ -94,7 +94,7 @@ export async function PUT(req: Request) {
 
     const { id, status, collectorId } = await req.json();
     const { role, id: userId } = session.user;
-    const isStaff = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'].includes(role);
+    const isStaff = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN', 'COLLECTOR'].includes(role);
 
     if (!isStaff) {
       if (status !== 'CANCELLED' || collectorId !== undefined) {

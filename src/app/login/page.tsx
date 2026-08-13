@@ -218,12 +218,17 @@ export default function LoginPage() {
                   )}
                 </button>
 
-                {/* <div className="p-3 bg-blue-50 border border-blue-200 rounded-sm text-xs space-y-1">
-                  <p className="font-bold text-[#1e3a8a]">💡 Quick Fill Credentials ({selectedRole}):</p>
-                  <p className="text-gray-700 font-mono text-[11px]">
-                    {email} / {password}
+                <div className="pt-3 border-t border-gray-200 text-center space-y-1.5">
+                  <p className="text-xs text-gray-600">
+                    New Citizen? Need doorstep pickup service?
                   </p>
-                </div> */}
+                  <a
+                    href="/signup"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#1e3a8a] hover:bg-blue-900 text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all shadow-sm w-full"
+                  >
+                    <User className="w-3.5 h-3.5" /> Register New Citizen Account
+                  </a>
+                </div>
               </form>
             </div>
           </div>
