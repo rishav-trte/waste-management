@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import React, { useEffect, useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ShieldCheck, Truck, ArrowRight, Lock, Mail, UserCheck, User } from 'lucide-react';
 import { toast } from 'sonner';
@@ -11,10 +11,24 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState<'COMMISSIONER' | 'SUB_ADMIN' | 'ADMIN' | 'COLLECTOR' | 'USER'>('COMMISSIONER');
+  const [selectedRole, setSelectedRole] = useState<'DEPARTMENT' | 'STAFF' | 'CITIZEN'>('DEPARTMENT');
   const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
 
-  const handleQuickFill = (targetRole: 'COMMISSIONER' | 'SUB_ADMIN' | 'ADMIN' | 'COLLECTOR' | 'USER') => {
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      const role = session.user.role;
+      if (['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'].includes(role)) {
+        router.push('/admin/dashboard');
+      } else if (role === 'USER') {
+        router.push('/portal/request-collection');
+      } else {
+        router.push('/collector/collect');
+      }
+    }
+  }, [session, status, router]);
+
+  const handleQuickFill = (targetRole: 'DEPARTMENT' | 'STAFF' | 'CITIZEN') => {
     setSelectedRole(targetRole);
   };
 
@@ -57,7 +71,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#f1f5f9] text-gray-900 flex flex-col font-sans">
       {/* Top Header matching Municipal Theme */}
-      <MunicipalPortalHeader portalTitle="Daman Municipal Council" portalSubtitle="Official Waste & Environmental Operations Portal" />
+      <MunicipalPortalHeader portalTitle="Daman Municipal Council" portalSubtitle="Official Waste & Environmental Operations Portal" hideSignOut={true} />
 
       {/* Main Login Body */}
       <main className="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8 flex items-center justify-center">
@@ -122,42 +136,31 @@ export default function LoginPage() {
               <div className="flex flex-wrap gap-1.5 p-1.5 bg-gray-200 border border-gray-300 rounded-sm text-[11px]">
                 <button
                   type="button"
-                  onClick={() => handleQuickFill('COMMISSIONER')}
+                  onClick={() => handleQuickFill('DEPARTMENT')}
                   className={`px-2.5 py-1 font-bold uppercase transition-all ${
-                    selectedRole === 'COMMISSIONER'
+                    selectedRole === 'DEPARTMENT'
                       ? 'bg-[#1e3a8a] text-white shadow-sm'
                       : 'text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  Commissioner
+                  Department Login
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleQuickFill('SUB_ADMIN')}
+                  onClick={() => handleQuickFill('STAFF')}
                   className={`px-2.5 py-1 font-bold uppercase transition-all ${
-                    selectedRole === 'SUB_ADMIN'
+                    selectedRole === 'STAFF'
                       ? 'bg-[#1e3a8a] text-white shadow-sm'
                       : 'text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  Sub Admin
+                  Staff
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleQuickFill('COLLECTOR')}
+                  onClick={() => handleQuickFill('CITIZEN')}
                   className={`px-2.5 py-1 font-bold uppercase transition-all ${
-                    selectedRole === 'COLLECTOR'
-                      ? 'bg-[#1e3a8a] text-white shadow-sm'
-                      : 'text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Collector
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickFill('USER')}
-                  className={`px-2.5 py-1 font-bold uppercase transition-all ${
-                    selectedRole === 'USER'
+                    selectedRole === 'CITIZEN'
                       ? 'bg-[#1e3a8a] text-white shadow-sm'
                       : 'text-gray-700 hover:bg-gray-300'
                   }`}

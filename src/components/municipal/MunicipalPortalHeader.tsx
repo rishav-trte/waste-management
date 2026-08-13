@@ -11,11 +11,13 @@ interface MunicipalPortalHeaderProps {
   portalTitle?: string;
   portalSubtitle?: string;
   showNavLinks?: boolean;
+  hideSignOut?: boolean;
 }
 
 export const MunicipalPortalHeader: React.FC<MunicipalPortalHeaderProps> = ({
   portalTitle = PORTAL_TITLE,
   portalSubtitle = PORTAL_SUBTITLE,
+  hideSignOut = false,
 }) => {
   const [textScale, setTextScale] = useState<TextScale>('normal');
   const [isHighContrast, setIsHighContrast] = useState<boolean>(false);
@@ -69,7 +71,7 @@ export const MunicipalPortalHeader: React.FC<MunicipalPortalHeaderProps> = ({
           </div>
 
           {/* Officer Status & Mobile Sign Out */}
-          {session?.user && (
+          {!hideSignOut && session?.user && (
             <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-1.5 sm:pt-0 border-t sm:border-t-0 border-gray-100 shrink-0">
               <div className="text-left sm:text-right min-w-0">
                 <p className="text-[11px] font-bold text-slate-800 truncate max-w-[130px] sm:max-w-[180px]">

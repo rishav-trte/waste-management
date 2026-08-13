@@ -18,6 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <MunicipalPortalHeader
         portalTitle="Waste Management System - Admin Center"
         portalSubtitle="Department of Municipal Waste & Environment Telemetry"
+        hideSignOut={true}
       />
       <div className="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
         <Sidebar />
