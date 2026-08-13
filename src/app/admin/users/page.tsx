@@ -19,6 +19,8 @@ export default function UserManagementPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('COLLECTOR');
+  const [vehicleType, setVehicleType] = useState('');
+  const [vehicleNumber, setVehicleNumber] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const fetchUsers = async () => {
@@ -50,8 +52,8 @@ export default function UserManagementPage() {
       const url = '/api/admin/users';
       const method = editingUser ? 'PUT' : 'POST';
       const bodyPayload = editingUser
-        ? { id: editingUser.id, name, role, ...(password && { password }) }
-        : { name, email, password, role };
+        ? { id: editingUser.id, name, role, ...(password && { password }), vehicleType, vehicleNumber }
+        : { name, email, password, role, vehicleType, vehicleNumber };
 
       const res = await fetch(url, {
         method,
@@ -81,6 +83,8 @@ export default function UserManagementPage() {
     setEmail(u.email);
     setPassword('');
     setRole(u.role);
+    setVehicleType(u.vehicleType || '');
+    setVehicleNumber(u.vehicleNumber || '');
     setShowModal(true);
   };
 
@@ -89,6 +93,8 @@ export default function UserManagementPage() {
     setEmail('');
     setPassword('');
     setRole('COLLECTOR');
+    setVehicleType('');
+    setVehicleNumber('');
     setEditingUser(null);
     setShowModal(false);
   };
@@ -206,6 +212,11 @@ export default function UserManagementPage() {
                       <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${getRoleBadge(u.role)}`}>
                         {u.role}
                       </span>
+                      {u.role === 'COLLECTOR' && (u.vehicleType || u.vehicleNumber) && (
+                        <div className="mt-1 text-[10px] text-slate-400 font-mono">
+                          🚐 {u.vehicleType || 'Vehicle'} {u.vehicleNumber ? `(${u.vehicleNumber})` : ''}
+                        </div>
+                      )}
                     </td>
                     <td className="py-3.5 px-4 text-slate-400 font-mono text-[11px]">
                       {new Date(u.createdAt).toLocaleDateString()}
@@ -293,6 +304,36 @@ export default function UserManagementPage() {
                   <option value="USER">Citizen User</option>
                 </select>
               </div>
+
+              {role === 'COLLECTOR' && (
+                <div className="grid grid-cols-2 gap-3 p-3 bg-slate-950/50 border border-slate-800 rounded-xl">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Vehicle Type</label>
+                    <select
+                      value={vehicleType}
+                      onChange={(e) => setVehicleType(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    >
+                      <option value="">Select Type</option>
+                      <option value="Mini Truck">Mini Truck</option>
+                      <option value="E-Rickshaw">E-Rickshaw</option>
+                      <option value="Auto Rickshaw">Auto Rickshaw</option>
+                      <option value="Tractor">Tractor</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Vehicle Number</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. DD-03-AB-1234"
+                      value={vehicleNumber}
+                      onChange={(e) => setVehicleNumber(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 uppercase"
+                    />
+                  </div>
+                </div>
+              )}
 
               <button
                 type="submit"

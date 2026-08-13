@@ -23,6 +23,8 @@ export async function GET() {
         name: true,
         email: true,
         role: true,
+        vehicleType: true,
+        vehicleNumber: true,
         createdAt: true,
       },
     });
@@ -42,7 +44,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { name, email, password, role } = await req.json();
+    const { name, email, password, role, vehicleType, vehicleNumber } = await req.json();
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: 'Name, email, and password are required' }, { status: 400 });
@@ -62,12 +64,16 @@ export async function POST(req: Request) {
         email,
         passwordHash,
         role: userRole,
+        vehicleType: userRole === 'COLLECTOR' ? vehicleType : null,
+        vehicleNumber: userRole === 'COLLECTOR' ? vehicleNumber : null,
       },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
+        vehicleType: true,
+        vehicleNumber: true,
         createdAt: true,
       },
     });
@@ -99,7 +105,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id, name, role, password } = await req.json();
+    const { id, name, role, password, vehicleType, vehicleNumber } = await req.json();
 
     if (!id) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
@@ -109,6 +115,8 @@ export async function PUT(req: Request) {
     if (name) updateData.name = name;
     if (role) updateData.role = role as Role;
     if (password) updateData.passwordHash = await bcrypt.hash(password, 10);
+    if (vehicleType !== undefined) updateData.vehicleType = role === 'COLLECTOR' || (!role && updateData.role === 'COLLECTOR') ? vehicleType : null;
+    if (vehicleNumber !== undefined) updateData.vehicleNumber = role === 'COLLECTOR' || (!role && updateData.role === 'COLLECTOR') ? vehicleNumber : null;
 
     const updatedUser = await prisma.user.update({
       where: { id },
@@ -118,6 +126,8 @@ export async function PUT(req: Request) {
         name: true,
         email: true,
         role: true,
+        vehicleType: true,
+        vehicleNumber: true,
         createdAt: true,
       },
     });

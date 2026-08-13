@@ -113,7 +113,7 @@ export function Sidebar() {
             </nav>
           </div>
 
-          <div className="pt-4 border-t border-blue-800 space-y-3">
+          <div className="pt-8 mt-8 border-t border-blue-800 space-y-5">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-[#f97316] text-white flex items-center justify-center font-bold text-xs border border-white">
                 {session?.user?.name?.[0] || 'A'}
