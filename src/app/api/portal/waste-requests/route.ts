@@ -87,12 +87,26 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const allowedRoles = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'];
-    if (!session || !allowedRoles.includes(session.user.role)) {
+    if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id, status, collectorId } = await req.json();
+    const { role, id: userId } = session.user;
+    const isStaff = ['COMMISSIONER', 'SUB_ADMIN', 'ADMIN'].includes(role);
+
+    if (!isStaff) {
+      if (status !== 'CANCELLED' || collectorId !== undefined) {
+        return NextResponse.json({ error: 'Unauthorized action' }, { status: 403 });
+      }
+      const existingRequest = await prisma.wasteRequest.findUnique({ where: { id } });
+      if (!existingRequest || existingRequest.userId !== userId) {
+        return NextResponse.json({ error: 'Not found or unauthorized' }, { status: 404 });
+      }
+      if (existingRequest.status !== 'PENDING') {
+        return NextResponse.json({ error: 'Only pending requests can be cancelled' }, { status: 400 });
+      }
+    }
 
     const updated = await prisma.wasteRequest.update({
       where: { id },
@@ -113,10 +127,10 @@ export async function PUT(req: Request) {
       userEmail: session.user.email,
       userName: session.user.name,
       role: session.user.role,
-      action: 'UPDATE_WASTE_REQUEST',
+      action: isStaff ? 'UPDATE_WASTE_REQUEST' : 'CANCEL_WASTE_REQUEST',
       entity: 'WasteRequest',
       entityId: updated.id,
-      details: `Updated Waste Pickup Request status to '${status}'`,
+      details: isStaff ? `Updated Waste Pickup Request status to '${status}'` : `Cancelled pending Waste Pickup Request`,
     });
 
     return NextResponse.json({ request: updated });

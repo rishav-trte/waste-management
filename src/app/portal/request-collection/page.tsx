@@ -121,6 +121,29 @@ export default function CitizenRequestPage() {
     }
   };
 
+  const handleCancel = async (id: string) => {
+    if (!confirm('Are you sure you want to cancel this pickup request?')) return;
+    
+    try {
+      const res = await fetch('/api/portal/waste-requests', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: 'CANCELLED' }),
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        toast.success('Pickup request cancelled');
+        fetchRequests();
+      } else {
+        toast.error(data.error || 'Failed to cancel request');
+      }
+    } catch (err) {
+      toast.error('An error occurred during cancellation');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col font-sans">
       <MunicipalPortalHeader
@@ -304,7 +327,18 @@ export default function CitizenRequestPage() {
                   )}
                   <div className="flex justify-between items-center text-[10px] text-slate-500 pt-1 border-t border-slate-800">
                     <span>Date: {new Date(r.preferredDate).toLocaleDateString()}</span>
-                    <span>Category: {r.propertyType?.name}</span>
+                    <div className="flex items-center gap-3">
+                      <span>Category: {r.propertyType?.name}</span>
+                      {r.status === 'PENDING' && (
+                        <button
+                          type="button"
+                          onClick={() => handleCancel(r.id)}
+                          className="text-red-400 hover:text-red-300 font-bold hover:underline"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))
