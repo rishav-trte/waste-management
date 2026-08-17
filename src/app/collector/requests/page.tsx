@@ -59,7 +59,7 @@ export default function CollectorWasteRequestsPage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
-      <CollectorNav />
+      {/* <CollectorNav /> */}
 
       <main className="flex-1 max-w-md w-full mx-auto p-4 space-y-4">
         {/* Header */}
