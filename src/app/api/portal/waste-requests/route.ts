@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { address, phone, latitude, longitude, propertyTypeId, wasteType, preferredDate, notes } = await req.json();
+    const { address, phone, latitude, longitude, propertyTypeId, wasteType, preferredDate, notes, razorpayOrderId } = await req.json();
 
     if (!address || !propertyTypeId || !preferredDate) {
       return NextResponse.json(
@@ -59,12 +59,19 @@ export async function POST(req: Request) {
         wasteType: wasteType || 'General Waste',
         preferredDate: new Date(preferredDate),
         notes: notes || null,
-        status: WasteRequestStatus.PENDING,
+        status: razorpayOrderId ? 'ASSIGNED' : WasteRequestStatus.PENDING,
       },
       include: {
         propertyType: true,
       },
     });
+
+    if (razorpayOrderId) {
+      await prisma.paymentOrder.update({
+        where: { razorpayOrderId },
+        data: { wasteRequestId: newRequest.id },
+      });
+    }
 
     // Audit Log Entry
     await logAuditAction({
