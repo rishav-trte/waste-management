@@ -23,7 +23,7 @@ export default function LoginPage() {
       } else if (role === 'USER') {
         router.push('/portal/request-collection');
       } else {
-        router.push('/collector/collect');
+        router.push('/collector/requests');
       }
     }
   }, [session, status, router]);
@@ -57,7 +57,7 @@ export default function LoginPage() {
         } else if (role === 'USER') {
           router.push('/portal/request-collection');
         } else {
-          router.push('/collector/collect');
+          router.push('/collector/requests');
         }
         router.refresh();
       }

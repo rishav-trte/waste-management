@@ -129,6 +129,7 @@ export default function CollectorWasteRequestsPage() {
                         <Phone className="w-3 h-3" /> {req.phone}
                       </a>
                     )}
+                    <p className="text-[11px] text-slate-400 mt-0.5">₹{req.price}</p>
                   </div>
                   <span
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
