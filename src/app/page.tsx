@@ -15,6 +15,6 @@ export default async function HomePage() {
   } else if (role === 'USER') {
     redirect('/portal/request-collection');
   } else {
-    redirect('/collector/collect');
+    redirect('/collector/requests');
   }
 }
