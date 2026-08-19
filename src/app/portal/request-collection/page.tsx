@@ -8,15 +8,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { MunicipalPortalHeader } from '@/components/municipal/MunicipalPortalHeader';
 import { formatCurrency } from '@/lib/utils';
 
-const loadRazorpayScript = () => {
-  return new Promise((resolve) => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-};
+import { processRazorpayPayment } from '@/lib/razorpayClient';
 
 export default function CitizenRequestPage() {
   const { data: session } = useSession();
@@ -133,20 +125,24 @@ export default function CitizenRequestPage() {
       const payOrder = await payRes.json();
 
       if (payRes.ok) {
-        const scriptLoaded = await loadRazorpayScript();
-        if (!scriptLoaded) {
-          toast.error('Razorpay SDK failed to load');
-          return;
-        }
-
-        const options = {
-          key: payOrder.key,
-          amount: payOrder.amount,
-          currency: payOrder.currency,
-          name: 'Waste Management',
-          description: 'Waste Collection Payment',
-          order_id: payOrder.orderId,
-          handler: async function (response: any) {
+        processRazorpayPayment(
+          {
+            key: payOrder.key,
+            amount: payOrder.amount,
+            currency: payOrder.currency,
+            name: 'Waste Management',
+            description: 'Waste Collection Payment',
+            order_id: payOrder.orderId,
+            prefill: {
+              name: session?.user?.name || '',
+              email: session?.user?.email || '',
+              contact: phone,
+            },
+            theme: {
+              color: '#10b981',
+            },
+          },
+          async (response: any) => {
             setProcessingPayment(true);
             try {
               const verifyRes = await fetch('/api/payments/razorpay/verify', {
@@ -196,21 +192,10 @@ export default function CitizenRequestPage() {
               setProcessingPayment(false);
             }
           },
-          prefill: {
-            name: session?.user?.name || '',
-            email: session?.user?.email || '',
-            contact: phone,
-          },
-          theme: {
-            color: '#10b981',
-          },
-        };
-
-        const paymentObject = new (window as any).Razorpay(options);
-        paymentObject.on('payment.failed', function (response: any) {
-          toast.error('Payment failed: ' + response.error.description);
-        });
-        paymentObject.open();
+          (error: any) => {
+            toast.error('Payment failed: ' + (error.description || error.message));
+          }
+        );
 
       } else {
         toast.error('Failed to initialize payment.');
@@ -261,20 +246,24 @@ export default function CitizenRequestPage() {
       const payOrder = await payRes.json();
 
       if (payRes.ok) {
-        const scriptLoaded = await loadRazorpayScript();
-        if (!scriptLoaded) {
-          toast.error('Razorpay SDK failed to load');
-          return;
-        }
-
-        const options = {
-          key: payOrder.key,
-          amount: payOrder.amount,
-          currency: payOrder.currency,
-          name: 'Waste Management',
-          description: 'Waste Collection Payment',
-          order_id: payOrder.orderId,
-          handler: async function (response: any) {
+        processRazorpayPayment(
+          {
+            key: payOrder.key,
+            amount: payOrder.amount,
+            currency: payOrder.currency,
+            name: 'Waste Management',
+            description: 'Waste Collection Payment',
+            order_id: payOrder.orderId,
+            prefill: {
+              name: session?.user?.name || '',
+              email: session?.user?.email || '',
+              contact: request.phone || '',
+            },
+            theme: {
+              color: '#10b981',
+            },
+          },
+          async (response: any) => {
             setProcessingPayment(true);
             try {
               const verifyRes = await fetch('/api/payments/razorpay/verify', {
@@ -300,21 +289,10 @@ export default function CitizenRequestPage() {
               setProcessingPayment(false);
             }
           },
-          prefill: {
-            name: session?.user?.name || '',
-            email: session?.user?.email || '',
-            contact: request.phone || '',
-          },
-          theme: {
-            color: '#10b981',
-          },
-        };
-
-        const paymentObject = new (window as any).Razorpay(options);
-        paymentObject.on('payment.failed', function (response: any) {
-          toast.error('Payment failed: ' + response.error.description);
-        });
-        paymentObject.open();
+          (error: any) => {
+            toast.error('Payment failed: ' + (error.description || error.message));
+          }
+        );
       }
     } catch (payErr) {
       toast.error('Failed to initialize payment.');

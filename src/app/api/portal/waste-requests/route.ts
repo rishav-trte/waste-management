@@ -25,7 +25,25 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ requests });
+    const requestIds = requests.map(r => r.id);
+    const payments = await prisma.paymentOrder.findMany({
+      where: {
+        wasteRequestId: { in: requestIds },
+        status: 'SUCCESS',
+      },
+    });
+
+    const paymentsByRequestId = payments.reduce((acc, p) => {
+      acc[p.wasteRequestId as string] = Number(p.amount);
+      return acc;
+    }, {} as Record<string, number>);
+
+    const formattedRequests = requests.map(req => ({
+      ...req,
+      price: paymentsByRequestId[req.id] || 0
+    }));
+
+    return NextResponse.json({ requests: formattedRequests });
   } catch (error) {
     console.error('Error fetching waste requests:', error);
     return NextResponse.json({ error: 'Failed to fetch waste requests' }, { status: 500 });
