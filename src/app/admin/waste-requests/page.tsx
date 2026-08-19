@@ -132,7 +132,10 @@ export default function SubAdminWasteRequestsPage() {
                     </td>
                     <td className="py-3.5 px-4">
                       <span className="text-emerald-400 font-bold block text-[11px]">{r.propertyType?.name}</span>
-                      <span className="text-slate-300 text-[10px] font-semibold">{r.wasteType}</span>
+                      <span className="text-slate-300 text-[10px] font-semibold block">{r.wasteType}</span>
+                      {(r as any).price !== undefined && (
+                        <span className="text-yellow-400 text-[10px] font-bold mt-1 block">Paid: ₹{(r as any).price}</span>
+                      )}
                     </td>
                     <td className="py-3.5 px-4 font-mono text-slate-400">
                       {new Date(r.preferredDate).toLocaleDateString()}
