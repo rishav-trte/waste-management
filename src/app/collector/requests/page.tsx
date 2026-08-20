@@ -58,23 +58,23 @@ export default function CollectorWasteRequestsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex flex-col font-sans">
       {/* <CollectorNav /> */}
 
       <main className="flex-1 max-w-md w-full mx-auto p-4 space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between bg-slate-800/80 p-4 border border-slate-700 rounded-xl shadow-md">
+        <div className="flex items-center justify-between bg-gray-100 dark:bg-slate-800/80 p-4 border border-gray-300 dark:border-slate-700 rounded-xl shadow-md">
           <div>
-            <h1 className="text-base font-bold text-white flex items-center gap-2">
+            <h1 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <Truck className="w-5 h-5 text-yellow-400" /> Citizen Pickup Requests
             </h1>
-            <p className="text-[11px] text-slate-400 mt-0.5">
+            <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5">
               On-demand doorstep waste collections requested by citizens.
             </p>
           </div>
           <button
             onClick={fetchRequests}
-            className="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-slate-300 transition-all"
+            className="p-2 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-lg text-gray-700 dark:text-slate-300 transition-all"
             title="Refresh List"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -82,7 +82,7 @@ export default function CollectorWasteRequestsPage() {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-800/60 rounded-xl border border-slate-700/60 text-xs overflow-x-auto">
+        <div className="flex items-center gap-1.5 p-1 bg-white dark:bg-slate-800/60 rounded-xl border border-gray-200 dark:border-slate-700/60 text-xs overflow-x-auto">
           {(['ALL', 'PENDING', 'ASSIGNED', 'COMPLETED'] as const).map((status) => (
             <button
               key={status}
@@ -90,7 +90,7 @@ export default function CollectorWasteRequestsPage() {
               className={`flex-1 py-1.5 px-2.5 rounded-lg font-bold uppercase text-[10px] tracking-wider transition-all whitespace-nowrap ${
                 filter === status
                   ? 'bg-[#f97316] text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                  : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700/50'
               }`}
             >
               {status}
@@ -100,13 +100,13 @@ export default function CollectorWasteRequestsPage() {
 
         {/* List of Requests */}
         {loading ? (
-          <div className="py-12 text-center text-slate-400 space-y-2">
+          <div className="py-12 text-center text-gray-500 dark:text-slate-400 space-y-2">
             <span className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-yellow-400 border-t-transparent" />
             <p className="text-xs">Loading citizen pickup queue...</p>
           </div>
         ) : filteredRequests.length === 0 ? (
-          <div className="bg-slate-800/40 border border-slate-700/60 rounded-xl p-8 text-center text-slate-400 space-y-2">
-            <AlertCircle className="w-8 h-8 text-slate-500 mx-auto" />
+          <div className="bg-gray-50 dark:bg-slate-800/40 border border-gray-200 dark:border-slate-700/60 rounded-xl p-8 text-center text-gray-500 dark:text-slate-400 space-y-2">
+            <AlertCircle className="w-8 h-8 text-gray-400 dark:text-slate-500 mx-auto" />
             <p className="text-xs font-semibold">No pickup requests found for '{filter}' status.</p>
           </div>
         ) : (
@@ -114,13 +114,13 @@ export default function CollectorWasteRequestsPage() {
             {filteredRequests.map((req) => (
               <div
                 key={req.id}
-                className="bg-slate-800/90 border border-slate-700 rounded-xl p-4 space-y-3 shadow-lg hover:border-slate-600 transition-all"
+                className="bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-slate-700 rounded-xl p-4 space-y-3 shadow-sm hover:border-gray-300 dark:hover:border-slate-600 transition-all"
               >
                 {/* Top Row: User info & Badge */}
-                <div className="flex items-start justify-between gap-2 border-b border-slate-700/70 pb-2.5">
+                <div className="flex items-start justify-between gap-2 border-b border-gray-100 dark:border-slate-700/70 pb-2.5">
                   <div>
-                    <h3 className="font-bold text-white text-sm">{req.user?.name || 'Citizen'}</h3>
-                    <p className="text-[11px] text-slate-400">{req.user?.email}</p>
+                    <h3 className="font-bold text-gray-900 dark:text-white text-sm">{req.user?.name || 'Citizen'}</h3>
+                    <p className="text-[11px] text-gray-500 dark:text-slate-400">{req.user?.email}</p>
                     {req.phone && (
                       <a
                         href={`tel:${req.phone}`}
@@ -129,7 +129,7 @@ export default function CollectorWasteRequestsPage() {
                         <Phone className="w-3 h-3" /> {req.phone}
                       </a>
                     )}
-                    <p className="text-[11px] text-slate-400 mt-0.5">₹{req.price}</p>
+                    <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5">₹{req.price}</p>
                   </div>
                   <span
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
@@ -145,11 +145,11 @@ export default function CollectorWasteRequestsPage() {
                 </div>
 
                 {/* Details */}
-                <div className="space-y-1.5 text-xs text-slate-300">
+                <div className="space-y-1.5 text-xs text-gray-700 dark:text-slate-300">
                   <div className="flex items-start gap-1.5">
                     <MapPin className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-medium text-slate-200">{req.address}</span>
+                      <span className="font-medium text-gray-800 dark:text-slate-200">{req.address}</span>
                       {req.latitude && req.longitude && (
                         <div className="mt-0.5">
                           <a
@@ -166,24 +166,24 @@ export default function CollectorWasteRequestsPage() {
                   </div>
 
                   <div className="flex items-center justify-between text-[11px] pt-1">
-                    <span className="bg-slate-700/60 px-2 py-0.5 rounded text-yellow-300 font-semibold">
+                    <span className="bg-amber-100 dark:bg-slate-700/60 px-2 py-0.5 rounded text-amber-800 dark:text-yellow-300 font-semibold">
                       Category: {req.propertyType?.name || 'General'} ({req.wasteType})
                     </span>
-                    <span className="flex items-center gap-1 text-slate-400 font-mono">
-                      <Calendar className="w-3 h-3 text-slate-400" />
+                    <span className="flex items-center gap-1 text-gray-500 dark:text-slate-400 font-mono">
+                      <Calendar className="w-3 h-3 text-gray-500 dark:text-slate-400" />
                       {new Date(req.preferredDate).toLocaleDateString()}
                     </span>
                   </div>
 
                   {req.notes && (
-                    <div className="bg-slate-900/60 p-2 rounded border border-slate-700/40 text-[11px] text-slate-300 italic">
+                    <div className="bg-gray-50 dark:bg-slate-900/60 p-2 rounded border border-gray-300 dark:border-slate-700/40 text-[11px] text-gray-700 dark:text-slate-300 italic">
                       " {req.notes} "
                     </div>
                   )}
                 </div>
 
                 {/* Action Button */}
-                <div className="pt-2 border-t border-slate-700/70 flex gap-2">
+                <div className="pt-2 border-t border-gray-300 dark:border-slate-700/70 flex gap-2">
                   {req.status === 'PENDING' && (
                     <button
                       onClick={() => handleUpdateStatus(req.id, 'ASSIGNED')}

@@ -14,13 +14,13 @@ export default async function CollectorLayout({ children }: { children: React.Re
   }
 
   return (
-    <div className="min-h-screen bg-[#f1f5f9] text-gray-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f1f5f9] dark:bg-slate-950 text-gray-900 dark:text-gray-100 flex flex-col font-sans">
       <MunicipalPortalHeader
         portalTitle="Waste Management System - Collector Portal"
         portalSubtitle="Field Collection & GIS Operations"
       />
       <CollectorNav />
-      <main className="flex-1 max-w-md w-full mx-auto p-4 space-y-4 bg-[#f1f5f9]">
+      <main className="flex-1 max-w-md w-full mx-auto p-4 space-y-4 bg-[#f1f5f9] dark:bg-slate-950">
         {children}
       </main>
       <footer className="bg-[#0f172a] text-gray-400 text-[11px] py-2 text-center border-t border-gray-700 mt-auto">
