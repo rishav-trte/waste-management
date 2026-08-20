@@ -305,7 +305,7 @@ export default function CitizenRequestPage() {
   const maxDateStr = maxDate.toISOString().split('T')[0];
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f1f5f9] flex flex-col font-sans">
       <MunicipalPortalHeader
         portalTitle="Citizen Municipal Portal"
         portalSubtitle="On-Demand Waste Pickup Request"
@@ -313,21 +313,21 @@ export default function CitizenRequestPage() {
 
       <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
         <div className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Schedule Pickup</h1>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Schedule Pickup</h1>
+          <p className="text-xs sm:text-sm text-gray-500 max-w-xl leading-relaxed">
             Schedule doorstep waste collection with GPS coordinates for precise collection team routing.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Request Form */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-5 shadow-xl">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
+          <form onSubmit={handleSubmit} className="lg:col-span-7 bg-white border border-gray-200 rounded-3xl p-6 space-y-5 shadow-xl">
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
               <Layers className="w-5 h-5 text-emerald-400" /> Schedule Pickup Slot & Coordinates
             </h2>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Phone Number</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1.5">Phone Number</label>
               <input
                 type="tel"
                 placeholder="e.g. +91 9876543210"
@@ -336,24 +336,24 @@ export default function CitizenRequestPage() {
                 maxLength={15}
                 pattern="^\+?[0-9\s\-\(\)]{10,15}$"
                 title="Phone number must be between 10 and 15 digits"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Property Location / Address *</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1.5">Property Location / Address *</label>
               <textarea
                 required
                 rows={2}
                 placeholder="Full premises address, landmark, building name..."
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               />
             </div>
 
             {/* GPS Coordinates & Autodetect */}
-            <div className="p-4 bg-slate-950/80 border border-slate-800 rounded-2xl space-y-3">
+            <div className="p-4 bg-emerald-50 border-emerald-100 border border-gray-200 rounded-2xl space-y-3">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 text-emerald-400" /> GIS Coordinates (Lat / Long)
@@ -371,7 +371,7 @@ export default function CitizenRequestPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] text-slate-400 font-medium mb-1">Latitude</label>
+                  <label className="block text-[11px] text-gray-500 font-medium mb-1">Latitude</label>
                   <input
                     type="number"
                     step="any"
@@ -380,12 +380,12 @@ export default function CitizenRequestPage() {
                     placeholder="e.g. 28.61393"
                     value={latitude}
                     onChange={(e) => setLatitude(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs text-gray-900 font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] text-slate-400 font-medium mb-1">Longitude</label>
+                  <label className="block text-[11px] text-gray-500 font-medium mb-1">Longitude</label>
                   <input
                     type="number"
                     step="any"
@@ -394,7 +394,7 @@ export default function CitizenRequestPage() {
                     placeholder="e.g. 77.20902"
                     value={longitude}
                     onChange={(e) => setLongitude(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs text-gray-900 font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   />
                 </div>
               </div>
@@ -402,11 +402,11 @@ export default function CitizenRequestPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Property Category</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">Property Category</label>
                 <select
                   value={propertyTypeId}
                   onChange={(e) => setPropertyTypeId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 >
                   {propertyTypes.map((t) => (
                     <option key={t.id} value={t.id}>
@@ -417,7 +417,7 @@ export default function CitizenRequestPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Preferred Date</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">Preferred Date</label>
                 <input
                   type="date"
                   required
@@ -425,13 +425,13 @@ export default function CitizenRequestPage() {
                   max={maxDateStr}
                   value={preferredDate}
                   onChange={(e) => setPreferredDate(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-2">Waste Category</label>
+              <label className="block text-xs font-medium text-gray-700 mb-2">Waste Category</label>
               <div className="grid grid-cols-2 gap-2.5">
                 {wasteCategories.map((c) => (
                   <button
@@ -439,8 +439,8 @@ export default function CitizenRequestPage() {
                     type="button"
                     onClick={() => setWasteType(c.name)}
                     className={`p-3 rounded-xl border text-left text-xs transition-all flex flex-col justify-between ${wasteType === c.name
-                        ? 'bg-emerald-950/60 border-emerald-500 text-white shadow-md'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                        ? 'bg-emerald-100 border-emerald-500 text-emerald-800 shadow-md'
+                        : 'bg-[#f1f5f9] border-gray-200 text-gray-500 hover:text-emerald-700 hover:bg-gray-50'
                       }`}
                   >
                     <div className="text-base mb-1">{c.icon}</div>
@@ -451,13 +451,13 @@ export default function CitizenRequestPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Special Instructions (Optional)</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1.5">Special Instructions (Optional)</label>
               <input
                 type="text"
                 placeholder="e.g. Call before arrival, gate access code..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               />
             </div>
 
@@ -472,20 +472,20 @@ export default function CitizenRequestPage() {
 
           {/* Existing Requests Track Board */}
           <div className="lg:col-span-5 space-y-4">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-400" /> My Scheduled Pickups
             </h2>
 
             <div className="space-y-3 max-h-[550px] overflow-y-auto pr-1">
               {myRequests.length === 0 ? (
-                <div className="p-6 bg-slate-900 border border-slate-800 rounded-2xl text-center text-xs text-slate-400">
+                <div className="p-6 bg-white border border-gray-200 rounded-2xl text-center text-xs text-gray-500">
                   No active pickup requests logged yet.
                 </div>
               ) : (
                 myRequests.map((r) => (
-                  <div key={r.id} className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-2 text-xs">
+                  <div key={r.id} className="p-4 bg-white border border-gray-200 rounded-2xl space-y-2 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white">{r.wasteType}</span>
+                      <span className="font-bold text-gray-900">{r.wasteType}</span>
                       <span
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${r.status === 'COMPLETED'
                             ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
@@ -497,13 +497,13 @@ export default function CitizenRequestPage() {
                         {r.status}
                       </span>
                     </div>
-                    <p className="text-slate-400 truncate">{r.address}</p>
+                    <p className="text-gray-500 truncate">{r.address}</p>
                     {(r.latitude || r.longitude) && (
                       <p className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
                         <MapPin className="w-3 h-3" /> {r.latitude?.toFixed(5)}, {r.longitude?.toFixed(5)}
                       </p>
                     )}
-                    <div className="flex justify-between items-center text-[10px] text-slate-500 pt-1 border-t border-slate-800">
+                    <div className="flex justify-between items-center text-[10px] text-gray-400 pt-1 border-t border-gray-200">
                       <span>Date: {new Date(r.preferredDate).toLocaleDateString()}</span>
                       <div className="flex items-center gap-3">
                         <span>Category: {r.propertyType?.name}</span>
