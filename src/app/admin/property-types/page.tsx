@@ -81,10 +81,12 @@ export default function PropertyTypesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-black tracking-tight">Property Categories & Pricing</h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <h1 className="text-2xl font-extrabold text-black tracking-tight flex items-center gap-2">
+            <Tags className="w-6 h-6 text-fuchsia-500" /> Property Categories & Pricing
+          </h1>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Define municipal property classifications and set dynamic collection pricing per property type.
           </p>
         </div>
@@ -101,11 +103,11 @@ export default function PropertyTypesPage() {
 
       {/* Grid of Property Types */}
       {loading ? (
-        <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-2xl">
+        <div className="py-16 text-center bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl">
           <LoadingSpinner size="lg" label="Fetching municipal property classifications & tariff rates..." />
         </div>
       ) : types.length === 0 ? (
-        <div className="py-12 text-center text-slate-500 bg-slate-900 border border-slate-800 rounded-2xl text-xs">
+        <div className="py-12 text-center text-gray-400 dark:text-slate-500 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl text-xs">
           No property categories defined yet.
         </div>
       ) : (
@@ -113,7 +115,7 @@ export default function PropertyTypesPage() {
           {types.map((t) => (
             <div
               key={t.id}
-              className="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 relative group hover:border-emerald-500/50 transition-all flex flex-col justify-between"
+              className="p-5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl space-y-4 relative group hover:border-emerald-500/50 transition-all flex flex-col justify-between"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -123,7 +125,7 @@ export default function PropertyTypesPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => openEditModal(t)}
-                      className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all text-xs flex items-center gap-1 font-semibold"
+                      className="p-1.5 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:text-white hover:bg-slate-700 transition-all text-xs flex items-center gap-1 font-semibold"
                     >
                       <Edit3 className="w-3.5 h-3.5" /> Edit
                     </button>
@@ -134,22 +136,22 @@ export default function PropertyTypesPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-white">{t.name}</h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">{t.description || 'No description provided.'}</p>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t.name}</h3>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1 leading-relaxed">{t.description || 'No description provided.'}</p>
                 </div>
 
                 {/* Price badge */}
-                <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                <div className="p-3 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-slate-400 font-medium">
                     <IndianRupee className="w-3.5 h-3.5 text-emerald-400" /> Active Tariff:
                   </div>
                   <span className="text-sm font-extrabold text-emerald-400">
-                    {formatCurrency(t.activePrice || 0)} <span className="text-[10px] text-slate-400 font-normal">/ {t.activeUnit || 'collection'}</span>
+                    {formatCurrency(t.activePrice || 0)} <span className="text-[10px] text-gray-500 dark:text-slate-400 font-normal">/ {t.activeUnit || 'collection'}</span>
                   </span>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+              <div className="pt-3 border-t border-gray-200 dark:border-slate-800/80 flex items-center justify-between text-xs text-gray-500 dark:text-slate-400">
                 <span>{t._count?.properties || 0} Registered Properties</span>
                 <span>{t._count?.pricingConfigs || 0} Pricing Revisions</span>
               </div>
@@ -160,15 +162,15 @@ export default function PropertyTypesPage() {
 
       {/* Modal for Creating / Editing Property Type & Price */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-100 dark:bg-slate-950/80 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 space-y-6 shadow-2xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                 {editingType ? 'Edit Property Category & Price' : 'Create Property Category'}
               </h2>
               <button
                 onClick={resetForm}
-                className="text-slate-400 hover:text-white text-xs font-semibold"
+                className="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:text-white text-xs font-semibold"
               >
                 ✕ Close
               </button>
@@ -176,19 +178,19 @@ export default function PropertyTypesPage() {
 
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Category Name</label>
+                <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Category Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Commercial, Healthcare, Institutional"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Base Tariff / Fee (₹)</label>
+                <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Base Tariff / Fee (₹)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -196,16 +198,16 @@ export default function PropertyTypesPage() {
                   placeholder="150"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 font-mono"
+                  className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Billing Unit</label>
+                <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Billing Unit</label>
                 <select
                   value={unit}
                   onChange={(e) => setUnit(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 >
                   <option value="per_collection">per collection</option>
                   <option value="per_month">per month</option>
@@ -214,13 +216,13 @@ export default function PropertyTypesPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Description</label>
+                <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Description</label>
                 <textarea
                   rows={3}
                   placeholder="Brief description of waste type and collection guidelines..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 />
               </div>
 

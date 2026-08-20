@@ -39,18 +39,18 @@ export default function AuditLogsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-slate-800 pb-5">
         <div>
           <h1 className="text-2xl font-extrabold text-black tracking-tight flex items-center gap-2">
             <History className="w-6 h-6 text-yellow-400" /> Municipal Audit Trail & Change Logs
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Complete audit logging of all property creations, tariff price modifications, bulk imports, and system entries.
           </p>
         </div>
         <button
           onClick={fetchLogs}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl transition-all border border-slate-700 shadow-sm"
+         className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 hover:bg-gray-100 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold rounded-xl transition-all shadow-sm"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh Logs
         </button>
@@ -59,20 +59,20 @@ export default function AuditLogsPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3.5 top-3 w-4 h-4 text-gray-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search log entries by user, email, or details..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
           />
         </div>
 
         <select
           value={filterAction}
           onChange={(e) => setFilterAction(e.target.value)}
-          className="px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+          className="px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
         >
           <option value="">All Audit Actions</option>
           <option value="CREATE_PROPERTY">Create Property</option>
@@ -84,10 +84,10 @@ export default function AuditLogsPage() {
       </div>
 
       {/* Logs Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider text-[10px]">
+            <thead className="bg-gray-50 dark:bg-gray-100 dark:bg-slate-950/80 text-gray-500 dark:text-slate-400 font-semibold border-b border-gray-200 dark:border-slate-800 uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="py-3.5 px-4">Timestamp</th>
                 <th className="py-3.5 px-4">User Officer</th>
@@ -97,7 +97,7 @@ export default function AuditLogsPage() {
                 <th className="py-3.5 px-4">Log Details</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-gray-200 dark:divide-slate-800/60 text-gray-700 dark:text-slate-300">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
@@ -106,19 +106,19 @@ export default function AuditLogsPage() {
                 </tr>
               ) : filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-500">
+                  <td colSpan={6} className="py-8 text-center text-gray-400 dark:text-slate-500">
                     No audit log entries recorded.
                   </td>
                 </tr>
               ) : (
                 filteredLogs.map((l) => (
-                  <tr key={l.id} className="hover:bg-slate-800/30 transition-all">
-                    <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400">
+                  <tr key={l.id} className="hover:bg-gray-100 dark:bg-gray-50 dark:bg-slate-800/30 transition-all">
+                    <td className="py-3.5 px-4 font-mono text-[11px] text-gray-500 dark:text-slate-400">
                       {new Date(l.createdAt).toLocaleString()}
                     </td>
-                    <td className="py-3.5 px-4 font-semibold text-white">
+                    <td className="py-3.5 px-4 font-semibold text-gray-900 dark:text-white">
                       {l.userName || l.userEmail || 'System'}
-                      <div className="text-[10px] text-slate-500 font-normal">{l.userEmail}</div>
+                      <div className="text-[10px] text-gray-400 dark:text-slate-500 font-normal">{l.userEmail}</div>
                     </td>
                     <td className="py-3.5 px-4">
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
@@ -129,7 +129,7 @@ export default function AuditLogsPage() {
                       {l.action}
                     </td>
                     <td className="py-3.5 px-4 text-emerald-400 font-semibold">{l.entity}</td>
-                    <td className="py-3.5 px-4 max-w-md leading-relaxed text-slate-300">
+                    <td className="py-3.5 px-4 max-w-md leading-relaxed text-gray-700 dark:text-slate-300">
                       {l.details}
                     </td>
                   </tr>

@@ -118,19 +118,19 @@ export default function UserManagementPage() {
       case 'COLLECTOR':
         return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
       default:
-        return 'bg-slate-800 text-slate-300 border-slate-700';
+        return 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-300 dark:border-slate-700';
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-slate-800 pb-5">
         <div>
           <h1 className="text-2xl font-extrabold text-black tracking-tight flex items-center gap-2">
             <Users className="w-6 h-6 text-emerald-400" /> Municipal User & RBAC Role Management
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Manage user accounts, assign RBAC roles (Commissioner, Sub Admin, Field Collector, Citizen), and issue access credentials.
           </p>
         </div>
@@ -148,20 +148,20 @@ export default function UserManagementPage() {
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3.5 top-3 w-4 h-4 text-gray-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search users by name or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
           />
         </div>
 
         <select
           value={filterRole}
           onChange={(e) => setFilterRole(e.target.value)}
-          className="px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+          className="px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
         >
           <option value="">All Roles</option>
           <option value="COMMISSIONER">Commissioner (Superadmin)</option>
@@ -173,10 +173,10 @@ export default function UserManagementPage() {
       </div>
 
       {/* Users Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider text-[10px]">
+            <thead className="bg-gray-50 dark:bg-gray-100 dark:bg-slate-950/80 text-gray-500 dark:text-slate-400 font-semibold border-b border-gray-200 dark:border-slate-800 uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="py-3.5 px-4">User Officer</th>
                 <th className="py-3.5 px-4">Email Address</th>
@@ -185,7 +185,7 @@ export default function UserManagementPage() {
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-gray-200 dark:divide-slate-800/60 text-gray-700 dark:text-slate-300">
               {loading ? (
                 <tr>
                   <td colSpan={5} className="py-12 text-center">
@@ -194,37 +194,37 @@ export default function UserManagementPage() {
                 </tr>
               ) : filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-slate-500">
+                  <td colSpan={5} className="py-8 text-center text-gray-400 dark:text-slate-500">
                     No user accounts found.
                   </td>
                 </tr>
               ) : (
                 filteredUsers.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-800/30 transition-all">
-                    <td className="py-3.5 px-4 font-bold text-white flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-slate-800 text-emerald-400 border border-slate-700 flex items-center justify-center text-xs font-extrabold">
+                  <tr key={u.id} className="hover:bg-gray-100 dark:bg-gray-50 dark:bg-slate-800/30 transition-all">
+                    <td className="py-3.5 px-4 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full bg-gray-100 dark:bg-slate-800 text-emerald-400 border border-gray-300 dark:border-slate-700 flex items-center justify-center text-xs font-extrabold">
                         {u.name[0]?.toUpperCase()}
                       </div>
                       {u.name}
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-slate-300">{u.email}</td>
+                    <td className="py-3.5 px-4 font-mono text-gray-700 dark:text-slate-300">{u.email}</td>
                     <td className="py-3.5 px-4">
                       <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${getRoleBadge(u.role)}`}>
                         {u.role}
                       </span>
                       {u.role === 'COLLECTOR' && (u.vehicleType || u.vehicleNumber) && (
-                        <div className="mt-1 text-[10px] text-slate-400 font-mono">
+                        <div className="mt-1 text-[10px] text-gray-500 dark:text-slate-400 font-mono">
                           🚐 {u.vehicleType || 'Vehicle'} {u.vehicleNumber ? `(${u.vehicleNumber})` : ''}
                         </div>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 text-slate-400 font-mono text-[11px]">
+                    <td className="py-3.5 px-4 text-gray-500 dark:text-slate-400 font-mono text-[11px]">
                       {new Date(u.createdAt).toLocaleDateString()}
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <button
                         onClick={() => openEditModal(u)}
-                        className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-semibold text-[11px] rounded-lg transition-all border border-slate-700 inline-flex items-center gap-1"
+                        className="px-3 py-1 bg-gray-100 dark:bg-slate-800 hover:bg-slate-700 text-gray-800 dark:text-slate-200 hover:text-gray-900 dark:text-white font-semibold text-[11px] rounded-lg transition-all border border-gray-300 dark:border-slate-700 inline-flex items-center gap-1"
                       >
                         <Edit3 className="w-3.5 h-3.5" /> Edit Role
                       </button>
@@ -239,32 +239,32 @@ export default function UserManagementPage() {
 
       {/* Modal for Creating / Editing User */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-100 dark:bg-slate-950/80 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 space-y-6 shadow-2xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                 {editingUser ? 'Edit User Account & Role' : 'Create Municipal User Account'}
               </h2>
-              <button onClick={resetForm} className="text-slate-400 hover:text-white text-xs font-semibold">
+              <button onClick={resetForm} className="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:text-white text-xs font-semibold">
                 ✕ Close
               </button>
             </div>
 
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label>
+                <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Full Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Ramesh Kumar"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
+                <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Email Address</label>
                 <input
                   type="email"
                   required
@@ -272,12 +272,12 @@ export default function UserManagementPage() {
                   placeholder="officer@wastemgmt.gov.in"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50"
+                  className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">
                   {editingUser ? 'New Password (leave blank to keep existing)' : 'Account Password'}
                 </label>
                 <input
@@ -286,16 +286,16 @@ export default function UserManagementPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">Assigned RBAC Role</label>
+                <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Assigned RBAC Role</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 >
                   <option value="COMMISSIONER">Commissioner (Superadmin)</option>
                   <option value="SUB_ADMIN">Sub Admin Operations</option>
@@ -306,13 +306,13 @@ export default function UserManagementPage() {
               </div>
 
               {role === 'COLLECTOR' && (
-                <div className="grid grid-cols-2 gap-3 p-3 bg-slate-950/50 border border-slate-800 rounded-xl">
+                <div className="grid grid-cols-2 gap-3 p-3 bg-gray-50 dark:bg-gray-50 dark:bg-slate-950/50 border border-gray-200 dark:border-slate-800 rounded-xl">
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Vehicle Type</label>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Vehicle Type</label>
                     <select
                       value={vehicleType}
                       onChange={(e) => setVehicleType(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                     >
                       <option value="">Select Type</option>
                       <option value="Mini Truck">Mini Truck</option>
@@ -323,13 +323,13 @@ export default function UserManagementPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Vehicle Number</label>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1.5">Vehicle Number</label>
                     <input
                       type="text"
                       placeholder="e.g. DD-03-AB-1234"
                       value={vehicleNumber}
                       onChange={(e) => setVehicleNumber(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 uppercase"
+                      className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 uppercase"
                     />
                   </div>
                 </div>

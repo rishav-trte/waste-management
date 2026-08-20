@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { MapPin, Search, ChevronRight, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
+import { MapPin, Search, ChevronRight, CheckCircle2, AlertCircle, RefreshCw, CheckSquare } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -44,10 +44,12 @@ export default function CollectionsAuditPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-black tracking-tight">Collection Audit Log</h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <h1 className="text-2xl font-extrabold text-black tracking-tight flex items-center gap-2">
+            <CheckSquare className="w-6 h-6 text-teal-500" /> Collection Audit Log
+          </h1>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Server-side cursor-paginated record browser optimized for high-volume government operational data.
           </p>
         </div>
@@ -56,7 +58,7 @@ export default function CollectionsAuditPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+            className="px-3.5 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
           >
             <option value="">All Payment Statuses</option>
             <option value="PAID">PAID Only</option>
@@ -66,7 +68,7 @@ export default function CollectionsAuditPage() {
 
           <button
             onClick={() => fetchCollections()}
-            className="p-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl transition-all"
+            className="p-2 bg-white dark:bg-slate-900 hover:bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-800 text-gray-700 dark:text-slate-300 rounded-xl transition-all"
             title="Refresh Log"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -74,10 +76,10 @@ export default function CollectionsAuditPage() {
         </div>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 uppercase font-semibold border-b border-slate-800">
+            <thead className="bg-gray-50 dark:bg-slate-950 text-gray-500 dark:text-slate-400 uppercase font-semibold border-b border-gray-200 dark:border-slate-800">
               <tr>
                 <th className="py-3.5 px-4">Log ID</th>
                 <th className="py-3.5 px-4">Property & Owner</th>
@@ -89,23 +91,23 @@ export default function CollectionsAuditPage() {
                 <th className="py-3.5 px-4">Collected At</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-gray-200 dark:divide-slate-800/60 text-gray-700 dark:text-slate-300">
               {collections.map((col) => (
-                <tr key={col.id} className="hover:bg-slate-800/40 transition-all">
-                  <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400">{col.id.substring(0, 8)}...</td>
-                  <td className="py-3.5 px-4 font-medium text-white">
-                    <p className="font-bold text-slate-100">{col.property?.ownerName}</p>
-                    <p className="text-[11px] text-slate-400 truncate max-w-xs">{col.property?.address}</p>
+                <tr key={col.id} className="hover:bg-gray-100 dark:bg-slate-800/40 transition-all">
+                  <td className="py-3.5 px-4 font-mono text-[11px] text-gray-500 dark:text-slate-400">{col.id.substring(0, 8)}...</td>
+                  <td className="py-3.5 px-4 font-medium text-gray-900 dark:text-white">
+                    <p className="font-bold text-gray-900 dark:text-slate-100">{col.property?.ownerName}</p>
+                    <p className="text-[11px] text-gray-500 dark:text-slate-400 truncate max-w-xs">{col.property?.address}</p>
                   </td>
                   <td className="py-3.5 px-4 font-medium">{col.collector?.name}</td>
                   <td className="py-3.5 px-4 font-extrabold text-emerald-400">
                     {formatCurrency(col.amountCharged)}
                   </td>
                   <td className="py-3.5 px-4">
-                    <p className="font-semibold text-slate-200">{col.paymentMethod}</p>
-                    <p className="text-[10px] text-slate-400 font-mono">{col.paymentReference || 'N/A'}</p>
+                    <p className="font-semibold text-gray-800 dark:text-slate-200">{col.paymentMethod}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-slate-400 font-mono">{col.paymentReference || 'N/A'}</p>
                   </td>
-                  <td className="py-3.5 px-4 text-slate-400 font-mono text-[11px]">
+                  <td className="py-3.5 px-4 text-gray-500 dark:text-slate-400 font-mono text-[11px]">
                     {col.latitude?.toFixed(4)}, {col.longitude?.toFixed(4)}
                   </td>
                   <td className="py-3.5 px-4">
@@ -119,7 +121,7 @@ export default function CollectionsAuditPage() {
                       </span>
                     )}
                   </td>
-                  <td className="py-3.5 px-4 text-slate-400">{formatDate(col.collectedAt)}</td>
+                  <td className="py-3.5 px-4 text-gray-500 dark:text-slate-400">{formatDate(col.collectedAt)}</td>
                 </tr>
               ))}
             </tbody>
@@ -128,11 +130,11 @@ export default function CollectionsAuditPage() {
 
         {/* Load More Pagination Button */}
         {nextCursor && (
-          <div className="p-4 bg-slate-950 border-t border-slate-800 flex justify-center">
+          <div className="p-4 bg-gray-50 dark:bg-slate-950 border-t border-gray-200 dark:border-slate-800 flex justify-center">
             <button
               onClick={() => fetchCollections(nextCursor)}
               disabled={loadingMore}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-700 transition-all shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-100 dark:bg-slate-800 hover:bg-slate-700 text-gray-900 dark:text-white text-xs font-semibold rounded-xl border border-gray-300 dark:border-slate-700 transition-all shadow-sm"
             >
               {loadingMore ? 'Fetching Next Page...' : 'Load More Records (Cursor-based Pagination)'} <ChevronRight className="w-4 h-4" />
             </button>

@@ -48,16 +48,18 @@ export default function AdminSupportDeskPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-black tracking-tight">Support Desk Management</h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <h1 className="text-2xl font-extrabold text-black tracking-tight flex items-center gap-2">
+            <LifeBuoy className="w-6 h-6 text-orange-500" /> Support Desk Management
+          </h1>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Sub-Admin & Commissioner help desk interface integrated with Freshdesk / Indian SaaS ticketing pipelines.
           </p>
         </div>
         <button
           onClick={fetchTickets}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl transition-all border border-slate-700"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 hover:bg-gray-100 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold rounded-xl transition-all shadow-sm"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh Tickets
         </button>
@@ -66,23 +68,23 @@ export default function AdminSupportDeskPage() {
       {/* Tickets List */}
       <div className="grid grid-cols-1 gap-4">
         {loading ? (
-          <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-2xl">
+          <div className="py-16 text-center bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl">
             <LoadingSpinner size="lg" label="Loading support desk tickets..." />
           </div>
         ) : tickets.length === 0 ? (
-          <div className="p-8 bg-slate-900 border border-slate-800 rounded-2xl text-center text-xs text-slate-400">
+          <div className="p-8 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl text-center text-xs text-gray-500 dark:text-slate-400">
             No support tickets logged in system.
           </div>
         ) : (
           tickets.map((t) => (
             <div
               key={t.id}
-              className="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 hover:border-slate-700 transition-all"
+              className="p-5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl space-y-4 hover:border-gray-300 dark:border-slate-700 transition-all"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200 dark:border-slate-800 pb-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-white text-sm">{t.subject}</span>
+                    <span className="font-bold text-gray-900 dark:text-white text-sm">{t.subject}</span>
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                         t.status === 'RESOLVED'
@@ -95,9 +97,9 @@ export default function AdminSupportDeskPage() {
                       {t.status}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Submitted by <span className="text-slate-200 font-semibold">{t.name}</span> ({t.email})
-                    {t.phone && <span className="ml-1 text-slate-400">• {t.phone}</span>}
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                    Submitted by <span className="text-gray-800 dark:text-slate-200 font-semibold">{t.name}</span> ({t.email})
+                    {t.phone && <span className="ml-1 text-gray-500 dark:text-slate-400">• {t.phone}</span>}
                   </p>
                 </div>
 
@@ -121,12 +123,12 @@ export default function AdminSupportDeskPage() {
                 </div>
               </div>
 
-              <div className="p-3.5 bg-slate-950 border border-slate-800/80 rounded-xl text-xs text-slate-300 leading-relaxed">
+              <div className="p-3.5 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800/80 rounded-xl text-xs text-gray-700 dark:text-slate-300 leading-relaxed">
                 {t.description}
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-500">
-                <span>Category: <strong className="text-slate-300">{t.category}</strong></span>
+              <div className="flex items-center justify-between text-[11px] text-gray-400 dark:text-slate-500">
+                <span>Category: <strong className="text-gray-700 dark:text-slate-300">{t.category}</strong></span>
                 <span>Submitted: {new Date(t.createdAt).toLocaleString()}</span>
               </div>
             </div>

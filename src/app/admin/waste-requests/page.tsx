@@ -44,18 +44,18 @@ export default function SubAdminWasteRequestsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-slate-800 pb-5">
         <div>
           <h1 className="text-2xl font-extrabold text-black tracking-tight flex items-center gap-2">
             <ShieldCheck className="w-7 h-7 text-[#1e3a8a]" /> Citizen Waste Pickup Dispatch & Audit Board
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Official Commissioner & Sub-Admin validation portal to review citizen pickup requests, verify telemetry, and dispatch field collectors.
           </p>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 p-1 rounded-lg text-xs">
+        <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-1 rounded-lg text-xs">
           {(['ALL', 'PENDING', 'ASSIGNED', 'COMPLETED', 'CANCELLED'] as const).map((status) => (
             <button
               key={status}
@@ -63,7 +63,7 @@ export default function SubAdminWasteRequestsPage() {
               className={`px-3 py-1.5 rounded-md font-bold uppercase text-[10px] tracking-wider transition-all ${
                 filter === status
                   ? 'bg-[#1e3a8a] text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800'
               }`}
             >
               {status}
@@ -73,10 +73,10 @@ export default function SubAdminWasteRequestsPage() {
       </div>
 
       {/* Requests Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider text-[10px]">
+            <thead className="bg-gray-50 dark:bg-gray-100 dark:bg-slate-950/80 text-gray-500 dark:text-slate-400 font-semibold border-b border-gray-200 dark:border-slate-800 uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="py-3.5 px-4">Citizen / User</th>
                 <th className="py-3.5 px-4">Address / Location</th>
@@ -86,7 +86,7 @@ export default function SubAdminWasteRequestsPage() {
                 <th className="py-3.5 px-4 text-right">Commissioner Dispatch Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-gray-200 dark:divide-slate-800/60 text-gray-700 dark:text-slate-300">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
@@ -95,16 +95,16 @@ export default function SubAdminWasteRequestsPage() {
                 </tr>
               ) : filteredRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-500">
+                  <td colSpan={6} className="py-8 text-center text-gray-400 dark:text-slate-500">
                     No citizen collection requests logged for filter '{filter}'.
                   </td>
                 </tr>
               ) : (
                 filteredRequests.map((r) => (
-                  <tr key={r.id} className="hover:bg-slate-800/30 transition-all">
+                  <tr key={r.id} className="hover:bg-gray-100 dark:bg-gray-50 dark:bg-slate-800/30 transition-all">
                     <td className="py-3.5 px-4">
-                      <div className="font-bold text-white">{r.user?.name || 'Citizen'}</div>
-                      <div className="text-[10px] text-slate-400">{r.user?.email}</div>
+                      <div className="font-bold text-gray-900 dark:text-white">{r.user?.name || 'Citizen'}</div>
+                      <div className="text-[10px] text-gray-500 dark:text-slate-400">{r.user?.email}</div>
                       {r.phone && (
                         <a
                           href={`tel:${r.phone}`}
@@ -115,7 +115,7 @@ export default function SubAdminWasteRequestsPage() {
                       )}
                     </td>
                     <td className="py-3.5 px-4 max-w-xs">
-                      <div className="font-medium text-white truncate">{r.address}</div>
+                      <div className="font-medium text-gray-900 dark:text-white truncate">{r.address}</div>
                       <div className="flex items-center gap-2 mt-0.5">
                         {(r.latitude || r.longitude) && (
                           <a
@@ -132,12 +132,12 @@ export default function SubAdminWasteRequestsPage() {
                     </td>
                     <td className="py-3.5 px-4">
                       <span className="text-emerald-400 font-bold block text-[11px]">{r.propertyType?.name}</span>
-                      <span className="text-slate-300 text-[10px] font-semibold block">{r.wasteType}</span>
+                      <span className="text-gray-700 dark:text-slate-300 text-[10px] font-semibold block">{r.wasteType}</span>
                       {(r as any).price !== undefined && (
                         <span className="text-yellow-400 text-[10px] font-bold mt-1 block">Paid: ₹{(r as any).price}</span>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-slate-400">
+                    <td className="py-3.5 px-4 font-mono text-gray-500 dark:text-slate-400">
                       {new Date(r.preferredDate).toLocaleDateString()}
                     </td>
                     <td className="py-3.5 px-4">
